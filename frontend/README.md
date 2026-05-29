@@ -73,3 +73,27 @@ export default defineConfig([
   },
 ])
 ```
+
+src/
+├── assets/
+├── components/     # Komponen UI Global
+├── config/
+├── features/       # ⭐️ Logika Bisnis & Komponen Spesifik Domain
+│   ├── auth/
+│   ├── transactions/
+│   └── ...
+├── hooks/
+├── layouts/        # Layout Pembungkus (Sidebar, Navbar)
+├── lib/            # Konfigurasi Library (Axios, Query)
+├── pages/          # ⭐️ Halaman (Composition Layer) - Menggabungkan fitur
+│   ├── auth/
+│   │   └── LoginPage.tsx
+│   ├── dashboard/
+│   │   └── DashboardPage.tsx
+│   └── ...
+├── routes/         # Konfigurasi Router Utama
+├── store/          # Zustand Global Store
+├── types/
+├── utils/
+├── App.tsx
+└── main.tsx
