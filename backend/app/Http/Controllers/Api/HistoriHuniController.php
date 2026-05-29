@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Penghuni\AssignPenghuniRequest;
-use App\Http\Requests\Penghuni\UnnassignPenghuniRequest;
+use App\Http\Requests\Penghuni\UnassignPenghuniRequest;
 use App\Models\Rumah;
 use App\Models\HistoriHuni;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +39,7 @@ class HistoriHuniController extends Controller
         return response()->json(['message' => 'Penghuni berhasil dimasukkan ke rumah ini.']);
     }
 
-    public function unassign(UnnassignPenghuniRequest $request, Rumah $rumah)
+    public function unassign(UnassignPenghuniRequest $request, Rumah $rumah)
     {
         $historiAktif = HistoriHuni::where('rumah_id', $rumah->id)
             ->whereNull('tanggal_selesai')

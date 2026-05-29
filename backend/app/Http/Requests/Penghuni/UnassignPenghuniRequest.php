@@ -4,7 +4,7 @@ namespace App\Http\Requests\Penghuni;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UnnassignPenghuniRequest extends FormRequest
+class UnassignPenghuniRequest extends FormRequest
 {
     public function authorize(): bool
     {
