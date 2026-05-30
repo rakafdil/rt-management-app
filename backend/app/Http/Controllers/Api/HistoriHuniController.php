@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusHuni;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Penghuni\AssignPenghuniRequest;
 use App\Http\Requests\Penghuni\UnassignPenghuniRequest;
@@ -21,7 +22,7 @@ class HistoriHuniController extends Controller
     {
         $penghuni = $request->validated();
 
-        if ($rumah->status_huni === 'dihuni') {
+        if ($rumah->status_huni === StatusHuni::DIHUNI) {
             return response()->json([
                 'message' => 'Rumah ini masih dihuni. Keluarkan penghuni sebelumnya terlebih dahulu.'
             ], 422);
@@ -35,7 +36,7 @@ class HistoriHuniController extends Controller
                 'tanggal_selesai' => null,
             ]);
 
-            $rumah->update(['status_huni' => 'dihuni']);
+            $rumah->update(['status_huni' => StatusHuni::DIHUNI]);
         });
 
         return response()->json(['message' => 'Penghuni berhasil dimasukkan ke rumah ini.']);
@@ -56,7 +57,7 @@ class HistoriHuniController extends Controller
         DB::transaction(function () use ($selesai, $rumah, $historiAktif) {
             $historiAktif->update(['tanggal_selesai' => $selesai->tanggal_selesai]);
 
-            $rumah->update(['status_huni' => 'kosong']);
+            $rumah->update(['status_huni' => StatusHuni::KOSONG]);
         });
 
         return response()->json(['message' => 'Penghuni berhasil dikeluarkan dari rumah ini.']);

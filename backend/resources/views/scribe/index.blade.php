@@ -119,6 +119,18 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-tagihan">
                                 <a href="#endpoints-GETapi-v1-tagihan">GET api/v1/tagihan</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-tagihan">
+                                <a href="#endpoints-POSTapi-v1-tagihan">POST api/v1/tagihan</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-tagihan--id-">
+                                <a href="#endpoints-GETapi-v1-tagihan--id-">GET api/v1/tagihan/{id}</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-v1-tagihan--id-">
+                                <a href="#endpoints-PUTapi-v1-tagihan--id-">PUT api/v1/tagihan/{id}</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-v1-tagihan--id-">
+                                <a href="#endpoints-DELETEapi-v1-tagihan--id-">DELETE api/v1/tagihan/{id}</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-tagihan-generate-manual">
                                 <a href="#endpoints-POSTapi-v1-tagihan-generate-manual">POST api/v1/tagihan/generate-manual</a>
                             </li>
@@ -499,9 +511,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "nomor_telepon=bngzmiyvdljnikhw"\
     --form "nama_lengkap=a"\
-    --form "status_penghuni=tetap"\
+    --form "status_penghuni=kontrak"\
     --form "status_menikah="\
-    --form "foto_ktp=@C:\Users\Asus\AppData\Local\Temp\php4376.tmp" </code></pre></div>
+    --form "foto_ktp=@C:\Users\Asus\AppData\Local\Temp\php51CE.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -517,7 +529,7 @@ const headers = {
 const body = new FormData();
 body.append('nomor_telepon', 'bngzmiyvdljnikhw');
 body.append('nama_lengkap', 'a');
-body.append('status_penghuni', 'tetap');
+body.append('status_penghuni', 'kontrak');
 body.append('status_menikah', '');
 body.append('foto_ktp', document.querySelector('input[name="foto_ktp"]').files[0]);
 
@@ -613,7 +625,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Asus\AppData\Local\Temp\php4376.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Asus\AppData\Local\Temp\php51CE.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>nomor_telepon</code></b>&nbsp;&nbsp;
@@ -646,10 +658,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status_penghuni"                data-endpoint="POSTapi-v1-penghuni"
-               value="tetap"
+               value="kontrak"
                data-component="body">
     <br>
-<p>Example: <code>tetap</code></p>
+<p>Example: <code>kontrak</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>tetap</code></li> <li><code>kontrak</code></li></ul>
         </div>
@@ -844,9 +856,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "nomor_telepon=bngzmiyvdljnikhw"\
     --form "nama_lengkap=a"\
-    --form "status_penghuni=tetap"\
-    --form "status_menikah=1"\
-    --form "foto_ktp=@C:\Users\Asus\AppData\Local\Temp\php4EB2.tmp" </code></pre></div>
+    --form "status_penghuni=kontrak"\
+    --form "status_menikah="\
+    --form "foto_ktp=@C:\Users\Asus\AppData\Local\Temp\php520D.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -862,8 +874,8 @@ const headers = {
 const body = new FormData();
 body.append('nomor_telepon', 'bngzmiyvdljnikhw');
 body.append('nama_lengkap', 'a');
-body.append('status_penghuni', 'tetap');
-body.append('status_menikah', '1');
+body.append('status_penghuni', 'kontrak');
+body.append('status_menikah', '');
 body.append('foto_ktp', document.querySelector('input[name="foto_ktp"]').files[0]);
 
 fetch(url, {
@@ -975,7 +987,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Asus\AppData\Local\Temp\php4EB2.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Asus\AppData\Local\Temp\php520D.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>nomor_telepon</code></b>&nbsp;&nbsp;
@@ -1008,10 +1020,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status_penghuni"                data-endpoint="PUTapi-v1-penghuni--id-"
-               value="tetap"
+               value="kontrak"
                data-component="body">
     <br>
-<p>Example: <code>tetap</code></p>
+<p>Example: <code>kontrak</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>tetap</code></li> <li><code>kontrak</code></li></ul>
         </div>
@@ -1035,7 +1047,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
         </form>
 
@@ -1215,10 +1227,34 @@ access-control-allow-origin: *
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 1,
-            &quot;blok_nomor&quot;: &quot;b&quot;,
+            &quot;id&quot;: 2,
+            &quot;blok_nomor&quot;: &quot;abc&quot;,
             &quot;status_huni&quot;: &quot;dihuni&quot;,
-            &quot;penghuni_aktif&quot;: null
+            &quot;penghuni_aktif&quot;: {
+                &quot;id&quot;: 7,
+                &quot;nama_lengkap&quot;: &quot;adfasdf&quot;,
+                &quot;nomor_telepon&quot;: null
+            }
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;blok_nomor&quot;: &quot;halo&quot;,
+            &quot;status_huni&quot;: &quot;dihuni&quot;,
+            &quot;penghuni_aktif&quot;: {
+                &quot;id&quot;: 3,
+                &quot;nama_lengkap&quot;: &quot;M. Raka&quot;,
+                &quot;nomor_telepon&quot;: &quot;3232123&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 1,
+            &quot;blok_nomor&quot;: &quot;woiii&quot;,
+            &quot;status_huni&quot;: &quot;dihuni&quot;,
+            &quot;penghuni_aktif&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_lengkap&quot;: &quot;Raka Fadillah&quot;,
+                &quot;nomor_telepon&quot;: &quot;123123123&quot;
+            }
         }
     ]
 }</code>
@@ -1315,8 +1351,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"blok_nomor\": \"b\",
-    \"status_huni\": \"kosong\",
-    \"penghuni_id\": \"architecto\"
+    \"penghuni_id\": \"architecto\",
+    \"tanggal_mulai\": \"2026-05-30T11:53:46\"
 }"
 </code></pre></div>
 
@@ -1333,8 +1369,8 @@ const headers = {
 
 let body = {
     "blok_nomor": "b",
-    "status_huni": "kosong",
-    "penghuni_id": "architecto"
+    "penghuni_id": "architecto",
+    "tanggal_mulai": "2026-05-30T11:53:46"
 };
 
 fetch(url, {
@@ -1432,20 +1468,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must not be greater than 50 characters. Example: <code>b</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>status_huni</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="status_huni"                data-endpoint="POSTapi-v1-rumah"
-               value="kosong"
-               data-component="body">
-    <br>
-<p>Example: <code>kosong</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>dihuni</code></li> <li><code>kosong</code></li></ul>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>penghuni_id</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -1456,6 +1478,18 @@ Must be one of:
                data-component="body">
     <br>
 <p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tanggal_mulai</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tanggal_mulai"                data-endpoint="POSTapi-v1-rumah"
+               value="2026-05-30T11:53:46"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:46</code></p>
         </div>
         </form>
 
@@ -1511,10 +1545,32 @@ access-control-allow-origin: *
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: 1,
-        &quot;blok_nomor&quot;: &quot;b&quot;,
+        &quot;blok_nomor&quot;: &quot;woiii&quot;,
         &quot;status_huni&quot;: &quot;dihuni&quot;,
-        &quot;penghuni_aktif&quot;: null,
-        &quot;histori_huni&quot;: []
+        &quot;penghuni_aktif&quot;: {
+            &quot;id&quot;: 2,
+            &quot;nama_lengkap&quot;: &quot;Raka Fadillah&quot;
+        },
+        &quot;histori_huni&quot;: [
+            {
+                &quot;id&quot;: 10,
+                &quot;nama_lengkap&quot;: &quot;Raka&quot;,
+                &quot;tanggal_mulai&quot;: &quot;30 May 2026&quot;,
+                &quot;tanggal_selesai&quot;: &quot;30 May 2026&quot;
+            },
+            {
+                &quot;id&quot;: 12,
+                &quot;nama_lengkap&quot;: &quot;Raka&quot;,
+                &quot;tanggal_mulai&quot;: &quot;30 May 2026&quot;,
+                &quot;tanggal_selesai&quot;: &quot;30 May 2026&quot;
+            },
+            {
+                &quot;id&quot;: 13,
+                &quot;nama_lengkap&quot;: &quot;Raka Fadillah&quot;,
+                &quot;tanggal_mulai&quot;: &quot;30 May 2026&quot;,
+                &quot;tanggal_selesai&quot;: &quot;Sekarang (Masih Aktif)&quot;
+            }
+        ]
     }
 }</code>
  </pre>
@@ -1622,7 +1678,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"blok_nomor\": \"b\"
+    \"blok_nomor\": \"b\",
+    \"penghuni_id\": \"architecto\",
+    \"tanggal_mulai\": \"2026-05-30T11:53:46\"
 }"
 </code></pre></div>
 
@@ -1638,7 +1696,9 @@ const headers = {
 };
 
 let body = {
-    "blok_nomor": "b"
+    "blok_nomor": "b",
+    "penghuni_id": "architecto",
+    "tanggal_mulai": "2026-05-30T11:53:46"
 };
 
 fetch(url, {
@@ -1751,6 +1811,30 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must not be greater than 50 characters. Example: <code>b</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>penghuni_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="penghuni_id"                data-endpoint="PUTapi-v1-rumah--id-"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tanggal_mulai</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tanggal_mulai"                data-endpoint="PUTapi-v1-rumah--id-"
+               value="2026-05-30T11:53:46"
+               data-component="body">
+    <br>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:46</code></p>
         </div>
         </form>
 
@@ -1928,7 +2012,68 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: []
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 10,
+            &quot;penghuni_id&quot;: 1,
+            &quot;rumah_id&quot;: 1,
+            &quot;tanggal_mulai&quot;: &quot;2026-05-30T00:00:00.000000Z&quot;,
+            &quot;tanggal_selesai&quot;: &quot;2026-05-30T00:00:00.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-05-30T06:27:13.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-05-30T06:27:46.000000Z&quot;,
+            &quot;penghuni&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_lengkap&quot;: &quot;Raka&quot;,
+                &quot;foto_ktp&quot;: &quot;foto_ktp/ffkiRZ9ukdH8Pw5frP2fXnXZBqOnDFe8bEBJZl9G.png&quot;,
+                &quot;status_penghuni&quot;: &quot;tetap&quot;,
+                &quot;nomor_telepon&quot;: &quot;085336678947&quot;,
+                &quot;status_menikah&quot;: false,
+                &quot;created_at&quot;: &quot;2026-05-29T11:07:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-05-29T13:08:46.000000Z&quot;,
+                &quot;deleted_at&quot;: null
+            }
+        },
+        {
+            &quot;id&quot;: 12,
+            &quot;penghuni_id&quot;: 1,
+            &quot;rumah_id&quot;: 1,
+            &quot;tanggal_mulai&quot;: &quot;2026-05-30T00:00:00.000000Z&quot;,
+            &quot;tanggal_selesai&quot;: &quot;2026-05-30T00:00:00.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-05-30T06:28:07.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-05-30T06:34:48.000000Z&quot;,
+            &quot;penghuni&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_lengkap&quot;: &quot;Raka&quot;,
+                &quot;foto_ktp&quot;: &quot;foto_ktp/ffkiRZ9ukdH8Pw5frP2fXnXZBqOnDFe8bEBJZl9G.png&quot;,
+                &quot;status_penghuni&quot;: &quot;tetap&quot;,
+                &quot;nomor_telepon&quot;: &quot;085336678947&quot;,
+                &quot;status_menikah&quot;: false,
+                &quot;created_at&quot;: &quot;2026-05-29T11:07:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-05-29T13:08:46.000000Z&quot;,
+                &quot;deleted_at&quot;: null
+            }
+        },
+        {
+            &quot;id&quot;: 13,
+            &quot;penghuni_id&quot;: 2,
+            &quot;rumah_id&quot;: 1,
+            &quot;tanggal_mulai&quot;: &quot;2026-05-30T00:00:00.000000Z&quot;,
+            &quot;tanggal_selesai&quot;: null,
+            &quot;created_at&quot;: &quot;2026-05-30T06:40:36.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-05-30T06:40:36.000000Z&quot;,
+            &quot;penghuni&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_lengkap&quot;: &quot;Raka Fadillah&quot;,
+                &quot;foto_ktp&quot;: &quot;foto_ktp/gMBM4fYWFy9xdgWGaT5Agz6PvfS2h4RoSkGJIGrf.png&quot;,
+                &quot;status_penghuni&quot;: &quot;tetap&quot;,
+                &quot;nomor_telepon&quot;: &quot;123123123&quot;,
+                &quot;status_menikah&quot;: true,
+                &quot;created_at&quot;: &quot;2026-05-29T13:19:32.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-05-29T13:19:32.000000Z&quot;,
+                &quot;deleted_at&quot;: null
+            }
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -2036,7 +2181,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"penghuni_id\": \"architecto\",
-    \"tanggal_mulai\": \"2026-05-30T01:21:21\"
+    \"tanggal_mulai\": \"2026-05-30T11:53:46\"
 }"
 </code></pre></div>
 
@@ -2053,7 +2198,7 @@ const headers = {
 
 let body = {
     "penghuni_id": "architecto",
-    "tanggal_mulai": "2026-05-30T01:21:21"
+    "tanggal_mulai": "2026-05-30T11:53:46"
 };
 
 fetch(url, {
@@ -2170,10 +2315,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="tanggal_mulai"                data-endpoint="POSTapi-v1-rumah--rumah_id--assign"
-               value="2026-05-30T01:21:21"
+               value="2026-05-30T11:53:46"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-05-30T01:21:21</code></p>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:46</code></p>
         </div>
         </form>
 
@@ -2194,7 +2339,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"tanggal_selesai\": \"2026-05-30T01:21:21\"
+    \"tanggal_selesai\": \"2026-05-30T11:53:46\"
 }"
 </code></pre></div>
 
@@ -2210,7 +2355,7 @@ const headers = {
 };
 
 let body = {
-    "tanggal_selesai": "2026-05-30T01:21:21"
+    "tanggal_selesai": "2026-05-30T11:53:46"
 };
 
 fetch(url, {
@@ -2315,10 +2460,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="tanggal_selesai"                data-endpoint="POSTapi-v1-rumah--rumah_id--unassign"
-               value="2026-05-30T01:21:21"
+               value="2026-05-30T11:53:46"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-05-30T01:21:21</code></p>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:46</code></p>
         </div>
         </form>
 
@@ -2372,7 +2517,56 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: []
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;100000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_iuran&quot;: &quot;Iuran Satpam&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;15000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_iuran&quot;: &quot;Iuran Kebersihan&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;30000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 3,
+                &quot;nama_iuran&quot;: &quot;Iuran Kas RT&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 4,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;25000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 4,
+                &quot;nama_iuran&quot;: &quot;Iuran Kegiatan Pemuda&quot;
+            }
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -2512,7 +2706,200 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: []
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;100000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_iuran&quot;: &quot;Iuran Satpam&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 1,
+                &quot;blok_nomor&quot;: &quot;woiii&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 11,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;30000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 3,
+                &quot;nama_iuran&quot;: &quot;Iuran Kas RT&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 3,
+                &quot;blok_nomor&quot;: &quot;halo&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 10,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;15000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_iuran&quot;: &quot;Iuran Kebersihan&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 3,
+                &quot;blok_nomor&quot;: &quot;halo&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 9,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;100000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_iuran&quot;: &quot;Iuran Satpam&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 3,
+                &quot;blok_nomor&quot;: &quot;halo&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 8,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;25000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 4,
+                &quot;nama_iuran&quot;: &quot;Iuran Kegiatan Pemuda&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 2,
+                &quot;blok_nomor&quot;: &quot;abc&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 7,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;30000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 3,
+                &quot;nama_iuran&quot;: &quot;Iuran Kas RT&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 2,
+                &quot;blok_nomor&quot;: &quot;abc&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 6,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;15000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_iuran&quot;: &quot;Iuran Kebersihan&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 2,
+                &quot;blok_nomor&quot;: &quot;abc&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 5,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;100000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 1,
+                &quot;nama_iuran&quot;: &quot;Iuran Satpam&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 2,
+                &quot;blok_nomor&quot;: &quot;abc&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 4,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;25000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 4,
+                &quot;nama_iuran&quot;: &quot;Iuran Kegiatan Pemuda&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 1,
+                &quot;blok_nomor&quot;: &quot;woiii&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;30000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 3,
+                &quot;nama_iuran&quot;: &quot;Iuran Kas RT&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 1,
+                &quot;blok_nomor&quot;: &quot;woiii&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;15000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 2,
+                &quot;nama_iuran&quot;: &quot;Iuran Kebersihan&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 1,
+                &quot;blok_nomor&quot;: &quot;woiii&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 12,
+            &quot;periode&quot;: &quot;February 2001&quot;,
+            &quot;periode_bulan&quot;: 2,
+            &quot;periode_tahun&quot;: 2001,
+            &quot;nominal_tagihan&quot;: &quot;25000.00&quot;,
+            &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+            &quot;jenis_iuran&quot;: {
+                &quot;id&quot;: 4,
+                &quot;nama_iuran&quot;: &quot;Iuran Kegiatan Pemuda&quot;
+            },
+            &quot;rumah&quot;: {
+                &quot;id&quot;: 3,
+                &quot;blok_nomor&quot;: &quot;halo&quot;
+            }
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -2588,6 +2975,652 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>application/json</code></p>
             </div>
                         </form>
+
+                    <h2 id="endpoints-POSTapi-v1-tagihan">POST api/v1/tagihan</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-v1-tagihan">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/v1/tagihan" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"rumah_id\": \"architecto\",
+    \"jenis_iuran_id\": \"architecto\",
+    \"periode_bulan\": 2,
+    \"periode_tahun\": 1539,
+    \"nominal_tagihan\": 66
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/tagihan"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "rumah_id": "architecto",
+    "jenis_iuran_id": "architecto",
+    "periode_bulan": 2,
+    "periode_tahun": 1539,
+    "nominal_tagihan": 66
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-tagihan">
+</span>
+<span id="execution-results-POSTapi-v1-tagihan" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-tagihan"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-tagihan"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-tagihan" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-tagihan">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-tagihan" data-method="POST"
+      data-path="api/v1/tagihan"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-tagihan', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-tagihan"
+                    onclick="tryItOut('POSTapi-v1-tagihan');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-tagihan"
+                    onclick="cancelTryOut('POSTapi-v1-tagihan');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-tagihan"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/tagihan</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-tagihan"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-tagihan"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>rumah_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="rumah_id"                data-endpoint="POSTapi-v1-tagihan"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the rumah table. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>jenis_iuran_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="jenis_iuran_id"                data-endpoint="POSTapi-v1-tagihan"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the jenis_iuran table. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>periode_bulan</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="periode_bulan"                data-endpoint="POSTapi-v1-tagihan"
+               value="2"
+               data-component="body">
+    <br>
+<p>Must be between 1 and 12. Example: <code>2</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>periode_tahun</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="periode_tahun"                data-endpoint="POSTapi-v1-tagihan"
+               value="1539"
+               data-component="body">
+    <br>
+<p>Must be at least 2000. Example: <code>1539</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>nominal_tagihan</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="nominal_tagihan"                data-endpoint="POSTapi-v1-tagihan"
+               value="66"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Example: <code>66</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-v1-tagihan--id-">GET api/v1/tagihan/{id}</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-tagihan--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/v1/tagihan/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/tagihan/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-tagihan--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;id&quot;: 1,
+        &quot;periode&quot;: &quot;February 2001&quot;,
+        &quot;periode_bulan&quot;: 2,
+        &quot;periode_tahun&quot;: 2001,
+        &quot;nominal_tagihan&quot;: &quot;100000.00&quot;,
+        &quot;status_pembayaran&quot;: &quot;belum_bayar&quot;,
+        &quot;jenis_iuran&quot;: {
+            &quot;id&quot;: 1,
+            &quot;nama_iuran&quot;: &quot;Iuran Satpam&quot;
+        },
+        &quot;rumah&quot;: {
+            &quot;id&quot;: 1,
+            &quot;blok_nomor&quot;: &quot;woiii&quot;
+        }
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-tagihan--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-tagihan--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-tagihan--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-tagihan--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-tagihan--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-tagihan--id-" data-method="GET"
+      data-path="api/v1/tagihan/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-tagihan--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-tagihan--id-"
+                    onclick="tryItOut('GETapi-v1-tagihan--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-tagihan--id-"
+                    onclick="cancelTryOut('GETapi-v1-tagihan--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-tagihan--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/tagihan/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-v1-tagihan--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the tagihan. Example: <code>1</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-PUTapi-v1-tagihan--id-">PUT api/v1/tagihan/{id}</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-PUTapi-v1-tagihan--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost:8000/api/v1/tagihan/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"rumah_id\": \"architecto\",
+    \"nominal_tagihan\": 22,
+    \"status_pembayaran\": \"sebagian\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/tagihan/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "rumah_id": "architecto",
+    "nominal_tagihan": 22,
+    "status_pembayaran": "sebagian"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-v1-tagihan--id-">
+</span>
+<span id="execution-results-PUTapi-v1-tagihan--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-v1-tagihan--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-v1-tagihan--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-v1-tagihan--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-v1-tagihan--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-v1-tagihan--id-" data-method="PUT"
+      data-path="api/v1/tagihan/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-v1-tagihan--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-v1-tagihan--id-"
+                    onclick="tryItOut('PUTapi-v1-tagihan--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-v1-tagihan--id-"
+                    onclick="cancelTryOut('PUTapi-v1-tagihan--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-v1-tagihan--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/v1/tagihan/{id}</code></b>
+        </p>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/tagihan/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the tagihan. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>rumah_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="rumah_id"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the rumah table. Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>nominal_tagihan</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="nominal_tagihan"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="22"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Example: <code>22</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status_pembayaran</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status_pembayaran"                data-endpoint="PUTapi-v1-tagihan--id-"
+               value="sebagian"
+               data-component="body">
+    <br>
+<p>Example: <code>sebagian</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>belum_bayar</code></li> <li><code>sebagian</code></li> <li><code>lunas</code></li></ul>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-v1-tagihan--id-">DELETE api/v1/tagihan/{id}</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-v1-tagihan--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost:8000/api/v1/tagihan/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/tagihan/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-tagihan--id-">
+</span>
+<span id="execution-results-DELETEapi-v1-tagihan--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-tagihan--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-tagihan--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-tagihan--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-tagihan--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-tagihan--id-" data-method="DELETE"
+      data-path="api/v1/tagihan/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-tagihan--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-tagihan--id-"
+                    onclick="tryItOut('DELETEapi-v1-tagihan--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-tagihan--id-"
+                    onclick="cancelTryOut('DELETEapi-v1-tagihan--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-tagihan--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/tagihan/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-tagihan--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-v1-tagihan--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the tagihan. Example: <code>1</code></p>
+            </div>
+                    </form>
 
                     <h2 id="endpoints-POSTapi-v1-tagihan-generate-manual">POST api/v1/tagihan/generate-manual</h2>
 
@@ -2880,7 +3913,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"rumah_id\": \"architecto\",
-    \"tanggal_bayar\": \"2026-05-30T01:21:22\",
+    \"tanggal_bayar\": \"2026-05-30T11:53:47\",
     \"total_bayar\": 22,
     \"metode_pembayaran\": \"g\",
     \"catatan\": \"architecto\"
@@ -2900,7 +3933,7 @@ const headers = {
 
 let body = {
     "rumah_id": "architecto",
-    "tanggal_bayar": "2026-05-30T01:21:22",
+    "tanggal_bayar": "2026-05-30T11:53:47",
     "total_bayar": 22,
     "metode_pembayaran": "g",
     "catatan": "architecto"
@@ -3019,10 +4052,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="tanggal_bayar"                data-endpoint="POSTapi-v1-pembayaran"
-               value="2026-05-30T01:21:22"
+               value="2026-05-30T11:53:47"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-05-30T01:21:22</code></p>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:47</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>total_bayar</code></b>&nbsp;&nbsp;
@@ -3362,7 +4395,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"deskripsi\": \"architecto\",
     \"nominal\": 22,
-    \"tanggal_pengeluaran\": \"2026-05-30T01:21:23\"
+    \"tanggal_pengeluaran\": \"2026-05-30T11:53:47\"
 }"
 </code></pre></div>
 
@@ -3380,7 +4413,7 @@ const headers = {
 let body = {
     "deskripsi": "architecto",
     "nominal": 22,
-    "tanggal_pengeluaran": "2026-05-30T01:21:23"
+    "tanggal_pengeluaran": "2026-05-30T11:53:47"
 };
 
 fetch(url, {
@@ -3508,10 +4541,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="tanggal_pengeluaran"                data-endpoint="POSTapi-v1-pengeluaran"
-               value="2026-05-30T01:21:23"
+               value="2026-05-30T11:53:47"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-05-30T01:21:23</code></p>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:47</code></p>
         </div>
         </form>
 
@@ -3674,7 +4707,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"deskripsi\": \"architecto\",
     \"nominal\": 22,
-    \"tanggal_pengeluaran\": \"2026-05-30T01:21:23\"
+    \"tanggal_pengeluaran\": \"2026-05-30T11:53:47\"
 }"
 </code></pre></div>
 
@@ -3692,7 +4725,7 @@ const headers = {
 let body = {
     "deskripsi": "architecto",
     "nominal": 22,
-    "tanggal_pengeluaran": "2026-05-30T01:21:23"
+    "tanggal_pengeluaran": "2026-05-30T11:53:47"
 };
 
 fetch(url, {
@@ -3837,10 +4870,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="tanggal_pengeluaran"                data-endpoint="PUTapi-v1-pengeluaran--id-"
-               value="2026-05-30T01:21:23"
+               value="2026-05-30T11:53:47"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-05-30T01:21:23</code></p>
+<p>Must be a valid date. Example: <code>2026-05-30T11:53:47</code></p>
         </div>
         </form>
 

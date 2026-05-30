@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusHuni;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +16,10 @@ class Rumah extends Model
     protected $fillable = [
         'blok_nomor',
         'status_huni',
+    ];
+
+    protected $casts = [
+        'status_huni' => StatusHuni::class,
     ];
 
     public function historiHuni(): HasMany

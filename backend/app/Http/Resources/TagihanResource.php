@@ -19,20 +19,22 @@ class TagihanResource extends JsonResource
             'periode_tahun' => $this->periode_tahun,
             'nominal_tagihan' => $this->nominal_tagihan,
             'status_pembayaran' => $this->status_pembayaran,
-            
+
             'jenis_iuran' => $this->whenLoaded('jenisIuran', function () {
                 return [
                     'id' => $this->jenisIuran->id,
                     'nama_iuran' => $this->jenisIuran->nama_iuran,
                 ];
             }),
-            
+
             'rumah' => $this->whenLoaded('rumah', function () {
                 return [
                     'id' => $this->rumah->id,
                     'blok_nomor' => $this->rumah->blok_nomor,
+                    'penghuni_aktif' => $this->rumah->penghuni_aktif
                 ];
             }),
+            'created_at' => $this->created_at
         ];
     }
 }

@@ -27,7 +27,7 @@ class StoreTagihanRequest extends FormRequest
             'jenis_iuran_id' => ['required', 'exists:jenis_iuran,id'],
             'periode_bulan' => ['required', 'integer', 'between:1,12'],
             'periode_tahun' => ['required', 'integer', 'min:2000'],
-            'nominal_tagihan' => ['required', 'numeric', 'min:1'],
+            'nominal_tagihan' => ['sometimes', 'nullable', 'numeric', 'min:1'],
         ];
     }
 

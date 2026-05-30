@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\StatusHuni;
 use Illuminate\Console\Command;
 use App\Models\Rumah;
 use App\Models\JenisIuran;
@@ -18,7 +19,7 @@ class GenerateTagihanBulanan extends Command
         $bulan = $this->option('bulan') ?? Carbon::now()->month;
         $tahun = $this->option('tahun') ?? Carbon::now()->year;
 
-        $rumahDihuni = Rumah::where('status_huni', 'dihuni')->get();
+        $rumahDihuni = Rumah::where('status_huni', StatusHuni::DIHUNI)->get();
         $semuaIuran = JenisIuran::all();
         $dibuat = 0;
 

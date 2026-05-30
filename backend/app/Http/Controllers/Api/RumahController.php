@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusHuni;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Rumah\StoreRumahRequest;
 use App\Http\Requests\Rumah\UpdateRumahRequest;
@@ -27,8 +28,8 @@ class RumahController extends Controller
             $rumah = Rumah::create([
                 'blok_nomor' => $store['blok_nomor'],
                 'status_huni' => !empty($store['penghuni_id'])
-                    ? 'dihuni'
-                    : 'kosong',
+                    ? StatusHuni::DIHUNI
+                    : StatusHuni::KOSONG,
             ]);
 
             if (!empty($store['penghuni_id'])) {
@@ -72,8 +73,8 @@ class RumahController extends Controller
             $rumah->update([
                 'blok_nomor' => $store['blok_nomor'],
                 'status_huni' => !empty($store['penghuni_id'])
-                    ? 'dihuni'
-                    : 'kosong',
+                    ? StatusHuni::DIHUNI
+                    : StatusHuni::KOSONG,
             ]);
 
             if (!empty($store['penghuni_id'])) {

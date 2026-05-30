@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusHuni;
 use App\Http\Controllers\Controller;
 use App\Models\Tagihan;
 use App\Models\Rumah;
@@ -32,7 +33,7 @@ class TagihanController extends Controller
             ->orderBy('periode_tahun', 'desc')
             ->orderBy('periode_bulan', 'desc')
             ->get();
-            
+
         return TagihanResource::collection($tagihan);
     }
 
@@ -46,7 +47,7 @@ class TagihanController extends Controller
         $bulan = $request->bulan ?? Carbon::now()->month;
         $tahun = $request->tahun ?? Carbon::now()->year;
 
-        $rumahDihuni = Rumah::where('status_huni', 'dihuni')->get();
+        $rumahDihuni = Rumah::where('status_huni', StatusHuni::DIHUNI)->get();
         $semuaIuran = JenisIuran::all();
         $dibuat = 0;
 
@@ -80,8 +81,16 @@ class TagihanController extends Controller
 
     public function store(StoreTagihanRequest $request)
     {
-        $tagihan = Tagihan::create($request->validated());
-        
+        $validatedData = $request->validated();
+
+        if (!isset($validatedData['nominal_tagihan'])) {
+            $jenisIuran = JenisIuran::findOrFail($validatedData['jenis_iuran_id']);
+
+            $validatedData['nominal_tagihan'] = $jenisIuran->nominal_default;
+        }
+
+        $tagihan = Tagihan::create($validatedData);
+
         $tagihan->load(['rumah', 'jenisIuran']);
 
         return response()->json([

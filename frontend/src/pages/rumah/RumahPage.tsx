@@ -46,10 +46,11 @@ import {
   useUpdateRumah,
 } from "@/features/rumah/hooks/useRumah";
 import { useGetPenghuni } from "@/features/penghuni/hooks/usePenghuni";
+import { Loading } from "@/components/Loading";
 
 export default function RumahPage() {
-  // const { rumah, penghuni } = rumahCrud.useGet()
-  const { data } = useGetRumah();
+  const { data, isLoading } = useGetRumah();
+
   const { data: penghuni } = useGetPenghuni();
 
   const createMutation = useCreateRumah();
@@ -91,6 +92,10 @@ export default function RumahPage() {
       });
     }
   }, [editing, open, reset]);
+  
+  if (isLoading) {
+    return <Loading message="Mengambil data terbaru dari server..." />;
+  }
 
   const submit = (data: FormRumahDTO) => {
     const formData = new FormData();
@@ -118,7 +123,7 @@ export default function RumahPage() {
           },
 
           onError: (error) => {
-            console.log(error)
+            console.log(error);
             toast.error("Gagal memperbarui penghuni");
           },
         },
@@ -165,9 +170,6 @@ export default function RumahPage() {
               {data?.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium">{r.blok_nomor}</TableCell>
-                  {/* <TableCell className="text-muted-foreground">
-                    {r.alamat}
-                  </TableCell> */}
                   <TableCell>
                     {r.penghuni_aktif ? (
                       <Badge className="bg-[oklch(0.62_0.15_155)] text-white hover:bg-[oklch(0.62_0.15_155)]">

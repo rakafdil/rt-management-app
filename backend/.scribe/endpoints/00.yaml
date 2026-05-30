@@ -142,7 +142,7 @@ endpoints:
         name: status_penghuni
         description: ''
         required: true
-        example: tetap
+        example: kontrak
         type: string
         enumValues:
           - tetap
@@ -164,7 +164,7 @@ endpoints:
     cleanBodyParameters:
       nomor_telepon: bngzmiyvdljnikhw
       nama_lengkap: a
-      status_penghuni: tetap
+      status_penghuni: kontrak
       status_menikah: false
     fileParameters:
       foto_ktp: null
@@ -300,7 +300,7 @@ endpoints:
         name: status_penghuni
         description: ''
         required: false
-        example: tetap
+        example: kontrak
         type: string
         enumValues:
           - tetap
@@ -313,7 +313,7 @@ endpoints:
         name: status_menikah
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -322,8 +322,8 @@ endpoints:
     cleanBodyParameters:
       nomor_telepon: bngzmiyvdljnikhw
       nama_lengkap: a
-      status_penghuni: tetap
-      status_menikah: true
+      status_penghuni: kontrak
+      status_menikah: false
     fileParameters:
       foto_ktp: null
     responses: []
@@ -404,7 +404,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":1,"blok_nomor":"b","status_huni":"dihuni","penghuni_aktif":null}]}'
+        content: '{"data":[{"id":2,"blok_nomor":"abc","status_huni":"dihuni","penghuni_aktif":{"id":7,"nama_lengkap":"adfasdf","nomor_telepon":null}},{"id":3,"blok_nomor":"halo","status_huni":"dihuni","penghuni_aktif":{"id":3,"nama_lengkap":"M. Raka","nomor_telepon":"3232123"}},{"id":1,"blok_nomor":"woiii","status_huni":"dihuni","penghuni_aktif":{"id":2,"nama_lengkap":"Raka Fadillah","nomor_telepon":"123123123"}}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -449,19 +449,6 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      status_huni:
-        custom: []
-        name: status_huni
-        description: ''
-        required: true
-        example: kosong
-        type: string
-        enumValues:
-          - dihuni
-          - kosong
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
       penghuni_id:
         custom: []
         name: penghuni_id
@@ -473,10 +460,21 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      tanggal_mulai:
+        custom: []
+        name: tanggal_mulai
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-05-30T11:53:46'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
     cleanBodyParameters:
       blok_nomor: b
-      status_huni: kosong
       penghuni_id: architecto
+      tanggal_mulai: '2026-05-30T11:53:46'
     fileParameters: []
     responses: []
     responseFields: []
@@ -525,7 +523,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":1,"blok_nomor":"b","status_huni":"dihuni","penghuni_aktif":null,"histori_huni":[]}}'
+        content: '{"data":{"id":1,"blok_nomor":"woiii","status_huni":"dihuni","penghuni_aktif":{"id":2,"nama_lengkap":"Raka Fadillah"},"histori_huni":[{"id":10,"nama_lengkap":"Raka","tanggal_mulai":"30 May 2026","tanggal_selesai":"30 May 2026"},{"id":12,"nama_lengkap":"Raka","tanggal_mulai":"30 May 2026","tanggal_selesai":"30 May 2026"},{"id":13,"nama_lengkap":"Raka Fadillah","tanggal_mulai":"30 May 2026","tanggal_selesai":"Sekarang (Masih Aktif)"}]}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -583,8 +581,32 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      penghuni_id:
+        custom: []
+        name: penghuni_id
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      tanggal_mulai:
+        custom: []
+        name: tanggal_mulai
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-05-30T11:53:46'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
     cleanBodyParameters:
       blok_nomor: b
+      penghuni_id: architecto
+      tanggal_mulai: '2026-05-30T11:53:46'
     fileParameters: []
     responses: []
     responseFields: []
@@ -676,7 +698,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[]}'
+        content: '{"data":[{"id":10,"penghuni_id":1,"rumah_id":1,"tanggal_mulai":"2026-05-30T00:00:00.000000Z","tanggal_selesai":"2026-05-30T00:00:00.000000Z","created_at":"2026-05-30T06:27:13.000000Z","updated_at":"2026-05-30T06:27:46.000000Z","penghuni":{"id":1,"nama_lengkap":"Raka","foto_ktp":"foto_ktp\/ffkiRZ9ukdH8Pw5frP2fXnXZBqOnDFe8bEBJZl9G.png","status_penghuni":"tetap","nomor_telepon":"085336678947","status_menikah":false,"created_at":"2026-05-29T11:07:00.000000Z","updated_at":"2026-05-29T13:08:46.000000Z","deleted_at":null}},{"id":12,"penghuni_id":1,"rumah_id":1,"tanggal_mulai":"2026-05-30T00:00:00.000000Z","tanggal_selesai":"2026-05-30T00:00:00.000000Z","created_at":"2026-05-30T06:28:07.000000Z","updated_at":"2026-05-30T06:34:48.000000Z","penghuni":{"id":1,"nama_lengkap":"Raka","foto_ktp":"foto_ktp\/ffkiRZ9ukdH8Pw5frP2fXnXZBqOnDFe8bEBJZl9G.png","status_penghuni":"tetap","nomor_telepon":"085336678947","status_menikah":false,"created_at":"2026-05-29T11:07:00.000000Z","updated_at":"2026-05-29T13:08:46.000000Z","deleted_at":null}},{"id":13,"penghuni_id":2,"rumah_id":1,"tanggal_mulai":"2026-05-30T00:00:00.000000Z","tanggal_selesai":null,"created_at":"2026-05-30T06:40:36.000000Z","updated_at":"2026-05-30T06:40:36.000000Z","penghuni":{"id":2,"nama_lengkap":"Raka Fadillah","foto_ktp":"foto_ktp\/gMBM4fYWFy9xdgWGaT5Agz6PvfS2h4RoSkGJIGrf.png","status_penghuni":"tetap","nomor_telepon":"123123123","status_menikah":true,"created_at":"2026-05-29T13:19:32.000000Z","updated_at":"2026-05-29T13:19:32.000000Z","deleted_at":null}}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -738,7 +760,7 @@ endpoints:
         name: tanggal_mulai
         description: 'Must be a valid date.'
         required: true
-        example: '2026-05-30T01:21:21'
+        example: '2026-05-30T11:53:46'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -746,7 +768,7 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       penghuni_id: architecto
-      tanggal_mulai: '2026-05-30T01:21:21'
+      tanggal_mulai: '2026-05-30T11:53:46'
     fileParameters: []
     responses: []
     responseFields: []
@@ -794,14 +816,14 @@ endpoints:
         name: tanggal_selesai
         description: 'Must be a valid date.'
         required: true
-        example: '2026-05-30T01:21:21'
+        example: '2026-05-30T11:53:46'
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      tanggal_selesai: '2026-05-30T01:21:21'
+      tanggal_selesai: '2026-05-30T11:53:46'
     fileParameters: []
     responses: []
     responseFields: []
@@ -850,7 +872,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[]}'
+        content: '{"data":[{"id":1,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"100000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":1,"nama_iuran":"Iuran Satpam"}},{"id":2,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"15000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":2,"nama_iuran":"Iuran Kebersihan"}},{"id":3,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"30000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":3,"nama_iuran":"Iuran Kas RT"}},{"id":4,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"25000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":4,"nama_iuran":"Iuran Kegiatan Pemuda"}}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -890,12 +912,281 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[]}'
+        content: '{"data":[{"id":1,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"100000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":1,"nama_iuran":"Iuran Satpam"},"rumah":{"id":1,"blok_nomor":"woiii"}},{"id":11,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"30000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":3,"nama_iuran":"Iuran Kas RT"},"rumah":{"id":3,"blok_nomor":"halo"}},{"id":10,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"15000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":2,"nama_iuran":"Iuran Kebersihan"},"rumah":{"id":3,"blok_nomor":"halo"}},{"id":9,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"100000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":1,"nama_iuran":"Iuran Satpam"},"rumah":{"id":3,"blok_nomor":"halo"}},{"id":8,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"25000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":4,"nama_iuran":"Iuran Kegiatan Pemuda"},"rumah":{"id":2,"blok_nomor":"abc"}},{"id":7,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"30000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":3,"nama_iuran":"Iuran Kas RT"},"rumah":{"id":2,"blok_nomor":"abc"}},{"id":6,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"15000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":2,"nama_iuran":"Iuran Kebersihan"},"rumah":{"id":2,"blok_nomor":"abc"}},{"id":5,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"100000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":1,"nama_iuran":"Iuran Satpam"},"rumah":{"id":2,"blok_nomor":"abc"}},{"id":4,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"25000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":4,"nama_iuran":"Iuran Kegiatan Pemuda"},"rumah":{"id":1,"blok_nomor":"woiii"}},{"id":3,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"30000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":3,"nama_iuran":"Iuran Kas RT"},"rumah":{"id":1,"blok_nomor":"woiii"}},{"id":2,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"15000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":2,"nama_iuran":"Iuran Kebersihan"},"rumah":{"id":1,"blok_nomor":"woiii"}},{"id":12,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"25000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":4,"nama_iuran":"Iuran Kegiatan Pemuda"},"rumah":{"id":3,"blok_nomor":"halo"}}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
           access-control-allow-origin: '*'
         description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/tagihan
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      rumah_id:
+        custom: []
+        name: rumah_id
+        description: 'The <code>id</code> of an existing record in the rumah table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      jenis_iuran_id:
+        custom: []
+        name: jenis_iuran_id
+        description: 'The <code>id</code> of an existing record in the jenis_iuran table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      periode_bulan:
+        custom: []
+        name: periode_bulan
+        description: 'Must be between 1 and 12.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      periode_tahun:
+        custom: []
+        name: periode_tahun
+        description: 'Must be at least 2000.'
+        required: true
+        example: 1539
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      nominal_tagihan:
+        custom: []
+        name: nominal_tagihan
+        description: 'Must be at least 1.'
+        required: true
+        example: 66
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      rumah_id: architecto
+      jenis_iuran_id: architecto
+      periode_bulan: 2
+      periode_tahun: 1539
+      nominal_tagihan: 66
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/tagihan/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the tagihan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"periode":"February 2001","periode_bulan":2,"periode_tahun":2001,"nominal_tagihan":"100000.00","status_pembayaran":"belum_bayar","jenis_iuran":{"id":1,"nama_iuran":"Iuran Satpam"},"rumah":{"id":1,"blok_nomor":"woiii"}}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/tagihan/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the tagihan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      rumah_id:
+        custom: []
+        name: rumah_id
+        description: 'The <code>id</code> of an existing record in the rumah table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      nominal_tagihan:
+        custom: []
+        name: nominal_tagihan
+        description: 'Must be at least 1.'
+        required: false
+        example: 22
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status_pembayaran:
+        custom: []
+        name: status_pembayaran
+        description: ''
+        required: false
+        example: sebagian
+        type: string
+        enumValues:
+          - belum_bayar
+          - sebagian
+          - lunas
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      rumah_id: architecto
+      nominal_tagihan: 22
+      status_pembayaran: sebagian
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/tagihan/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the tagihan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
     responseFields: []
     auth: []
     controller: null
@@ -1046,7 +1337,7 @@ endpoints:
         name: tanggal_bayar
         description: 'Must be a valid date.'
         required: true
-        example: '2026-05-30T01:21:22'
+        example: '2026-05-30T11:53:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1098,7 +1389,7 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       rumah_id: architecto
-      tanggal_bayar: '2026-05-30T01:21:22'
+      tanggal_bayar: '2026-05-30T11:53:47'
       total_bayar: 22
       metode_pembayaran: g
       catatan: architecto
@@ -1265,7 +1556,7 @@ endpoints:
         name: tanggal_pengeluaran
         description: 'Must be a valid date.'
         required: true
-        example: '2026-05-30T01:21:23'
+        example: '2026-05-30T11:53:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1274,7 +1565,7 @@ endpoints:
     cleanBodyParameters:
       deskripsi: architecto
       nominal: 22
-      tanggal_pengeluaran: '2026-05-30T01:21:23'
+      tanggal_pengeluaran: '2026-05-30T11:53:47'
     fileParameters: []
     responses: []
     responseFields: []
@@ -1411,7 +1702,7 @@ endpoints:
         name: tanggal_pengeluaran
         description: 'Must be a valid date.'
         required: false
-        example: '2026-05-30T01:21:23'
+        example: '2026-05-30T11:53:47'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1420,7 +1711,7 @@ endpoints:
     cleanBodyParameters:
       deskripsi: architecto
       nominal: 22
-      tanggal_pengeluaran: '2026-05-30T01:21:23'
+      tanggal_pengeluaran: '2026-05-30T11:53:47'
     fileParameters: []
     responses: []
     responseFields: []
