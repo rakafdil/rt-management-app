@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatRp } from "@/lib/formatters";
-import { store, useDB } from "@/lib/store";
 import {
   Select,
   SelectContent,
@@ -17,10 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
-
-const TARIF = { satpam: 100000, kebersihan: 15000 };
+import { useGetRumah } from "@/features/rumah/hooks/useRumah";
+import { useCreateTagihan, useGetTagihan } from "../hooks/useTagihan";
+import { useGetPenghuni } from "@/features/penghuni/hooks/usePenghuni";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createTagihanSchema, type CreateTagihanDTO } from "../types";
+import { Loader2 } from "lucide-react";
 
 export function TambahTagihanDialog({
   open,
@@ -29,168 +32,195 @@ export function TambahTagihanDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
-  const { rumah, penghuni } = useDB();
-  const today = new Date().toISOString().slice(0, 10);
-  const [form, setForm] = useState({
-    rumahId: "",
-    jenis: "satpam" as "satpam" | "kebersihan",
-    periode: today.slice(0, 7),
-    jumlahBulan: 1,
-    tanggal: today,
-    status: "lunas" as "lunas" | "belum",
+  const { data: rumah } = useGetRumah();
+  const { data: tagihan } = useGetTagihan();
+  const { data: penghuni } = useGetPenghuni();
+
+  const createTagihanMutation = useCreateTagihan();
+
+  const form = useForm<CreateTagihanDTO>({
+    resolver: zodResolver(createTagihanSchema),
   });
 
-  const r = rumah.find((x) => x.id === form.rumahId);
-  const penghuniRumah = r?.penghuniAktifId
-    ? penghuni.find((p) => p.id === r.penghuniAktifId)
-    : null;
+  const { register, handleSubmit, control, reset, setValue } = form;
 
-  function submit() {
-    if (!form.rumahId) {
+  const uniqueJenisIuran = Array.from(
+    new Map(
+      tagihan?.map((t) => [t.jenis_iuran?.id, t.jenis_iuran]) ?? [],
+    ).values(),
+  );
+
+  const selectedJenisIuranId = useWatch({
+    control,
+    name: "jenis_iuran_id",
+  });
+
+  useEffect(() => {
+    const jenisIuran = uniqueJenisIuran.find(
+      (u) => u?.id === Number(selectedJenisIuranId),
+    );
+
+    if (jenisIuran) {
+      setValue("nominal_tagihan", jenisIuran.nominal_default);
+    }
+  }, [selectedJenisIuranId, uniqueJenisIuran, setValue]);
+
+  const submit = (data: CreateTagihanDTO) => {
+    if (!data.rumah_id) {
       toast.error("Pilih rumah");
       return;
     }
-    if (!penghuniRumah) {
-      toast.error("Rumah belum ada penghuni");
-      return;
-    }
-    store.addPembayaran({
-      rumahId: form.rumahId,
-      penghuniId: penghuniRumah.id,
-      jenis: form.jenis,
-      periode: form.periode,
-      jumlahBulan: form.jumlahBulan,
-      nominal: TARIF[form.jenis],
-      tanggal: form.tanggal,
-      status: form.status,
+
+    let nominal_tagihan = null;
+    if (data.nominal_tagihan) nominal_tagihan = data.nominal_tagihan;
+
+    const payload = {
+      rumah_id: String(data.rumah_id),
+      jenis_iuran_id: data.jenis_iuran_id,
+      periode_bulan: data.periode_bulan,
+      periode_tahun: data.periode_tahun,
+      nominal_tagihan: nominal_tagihan,
+    };
+
+    const formData = new FormData();
+
+    Object.entries(payload).forEach(([key, value]) => {
+      formData.append(key, String(value));
     });
-    toast.success("Pembayaran dicatat");
-    onOpenChange(false);
-  }
+
+    createTagihanMutation.mutate(formData, {
+      onSuccess() {
+        toast.success("Tagihan dicatat");
+        onOpenChange(false);
+        reset();
+      },
+      onError(err) {
+        const msg = err?.message ?? "Gagal menambahkan tagihan";
+        toast.error(msg);
+      },
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Catat Pembayaran</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label>Rumah</Label>
-            <Select
-              value={form.rumahId}
-              onValueChange={(v) => setForm({ ...form, rumahId: v })}
-            >
-              <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Pilih rumah" />
-              </SelectTrigger>
-              <SelectContent>
-                {rumah
-                  .filter((r) => r.penghuniAktifId)
-                  .map((r) => {
-                    const p = penghuni.find((x) => x.id === r.penghuniAktifId);
-                    return (
-                      <SelectItem key={r.id} value={r.id}>
-                        {r.nomor} — {p?.nama}
-                      </SelectItem>
-                    );
-                  })}
-              </SelectContent>
-            </Select>
-            {penghuniRumah && (
-              <div className="text-xs text-muted-foreground mt-1">
-                Penghuni: {penghuniRumah.nama} ({penghuniRumah.status})
+        <form
+          onSubmit={handleSubmit(submit, (errors) => {
+            const msg = errors?.form?.message ?? "Gagal menambahkan tagihan";
+            toast.error(msg);
+          })}
+        >
+          <DialogHeader>
+            <DialogTitle>Tambahkan Tagihan</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 w-full my-4">
+            <div>
+              <Label>Rumah</Label>
+              <Controller
+                control={control}
+                name="rumah_id"
+                render={({ field }) => {
+                  const selectedRumah = rumah?.find(
+                    (r) => r.id === String(field.value),
+                  );
+
+                  const selectedPenghuni = penghuni?.find(
+                    (p) => p.id === selectedRumah?.penghuni_aktif?.id,
+                  );
+
+                  return (
+                    <Select
+                      value={field.value ? String(field.value) : ""}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                    >
+                      <SelectTrigger className="mt-1.5">
+                        <SelectValue placeholder="Pilih rumah">
+                          {selectedRumah
+                            ? `${selectedRumah.blok_nomor} — ${selectedPenghuni?.nama_lengkap ?? ""}`
+                            : undefined}
+                        </SelectValue>
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {rumah
+                          ?.filter((r) => r.penghuni_aktif)
+                          .map((r) => {
+                            const p = penghuni?.find(
+                              (x) => x.id === r.penghuni_aktif?.id,
+                            );
+
+                            return (
+                              <SelectItem key={r.id} value={String(r.id)}>
+                                {r.blok_nomor} — {p?.nama_lengkap}
+                              </SelectItem>
+                            );
+                          })}
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Jenis Iuran</Label>
+                <Controller
+                  control={control}
+                  name="jenis_iuran_id"
+                  render={({ field }) => (
+                    <Select
+                      value={String(field.value ?? "")}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                    >
+                      <SelectTrigger className="mt-1.5">
+                        <SelectValue placeholder="Pilih jenis iuran" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueJenisIuran.map((jenis) => (
+                          <SelectItem key={jenis?.id} value={String(jenis?.id)}>
+                            {jenis?.nama_iuran}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Jenis Iuran</Label>
-              <Select
-                value={form.jenis}
-                onValueChange={(v: any) => setForm({ ...form, jenis: v })}
-              >
-                <SelectTrigger className="mt-1.5">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="satpam">
-                    Satpam ({formatRp(TARIF.satpam)}/bln)
-                  </SelectItem>
-                  <SelectItem value="kebersihan">
-                    Kebersihan ({formatRp(TARIF.kebersihan)}/bln)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <Label>Nominal Tagihan</Label>
+                <Input
+                  type="number"
+                  className="mt-1.5"
+                  {...register("nominal_tagihan", {
+                    valueAsNumber: true,
+                  })}
+                />
+              </div>
             </div>
-            <div>
-              <Label>Jumlah Bulan</Label>
-              <Select
-                value={String(form.jumlahBulan)}
-                onValueChange={(v) =>
-                  setForm({ ...form, jumlahBulan: parseInt(v) })
-                }
-              >
-                <SelectTrigger className="mt-1.5">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 bulan</SelectItem>
-                  <SelectItem value="3">3 bulan</SelectItem>
-                  <SelectItem value="6">6 bulan</SelectItem>
-                  <SelectItem value="12">12 bulan (tahunan)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Periode Mulai</Label>
+            <div className="w-full">
+              <Label>Periode Bayar</Label>
               <Input
                 type="month"
-                value={form.periode}
-                onChange={(e) => setForm({ ...form, periode: e.target.value })}
-                className="mt-1.5"
-              />
-            </div>
-            <div>
-              <Label>Tanggal Bayar</Label>
-              <Input
-                type="date"
-                value={form.tanggal}
-                onChange={(e) => setForm({ ...form, tanggal: e.target.value })}
-                className="mt-1.5"
+                className="mt-1.5 w-full text-center [&::-webkit-datetime-edit]:text-center"
+                onChange={(e) => {
+                  const [year, month] = e.target.value.split("-");
+
+                  setValue("periode_tahun", Number(year));
+                  setValue("periode_bulan", Number(month));
+                }}
               />
             </div>
           </div>
-          <div>
-            <Label>Status</Label>
-            <Select
-              value={form.status}
-              onValueChange={(v: any) => setForm({ ...form, status: v })}
-            >
-              <SelectTrigger className="mt-1.5">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="lunas">Lunas</SelectItem>
-                <SelectItem value="belum">Belum Lunas</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="rounded-md bg-muted p-3 text-sm flex justify-between">
-            <span>Total</span>
-            <span className="font-semibold">
-              {formatRp(TARIF[form.jenis] * form.jumlahBulan)}
-            </span>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Batal
-          </Button>
-          <Button onClick={submit}>Simpan</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Batal
+            </Button>
+            <Button type="submit" disabled={createTagihanMutation.isPending}>
+              {createTagihanMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {createTagihanMutation.isPending ? "Menyimpan..." : "Simpan"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

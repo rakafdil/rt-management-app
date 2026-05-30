@@ -16,6 +16,7 @@ export const tagihanSchema = z.object({
     .object({
       id: z.number(),
       nama_iuran: z.string(),
+      nominal_default: z.number()
     })
     .optional(),
 

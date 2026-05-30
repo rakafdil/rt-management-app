@@ -24,6 +24,7 @@ class TagihanResource extends JsonResource
                 return [
                     'id' => $this->jenisIuran->id,
                     'nama_iuran' => $this->jenisIuran->nama_iuran,
+                    'nominal_default' => $this->jenisIuran->nominal_default
                 ];
             }),
 
