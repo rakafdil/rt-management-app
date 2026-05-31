@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
   useGetRumah,
@@ -35,6 +34,7 @@ import { Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatRp } from "@/lib/formatters";
 import { Textarea } from "@/components/ui/textarea";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function PembayaranDialog({
   open,
@@ -51,23 +51,25 @@ export function PembayaranDialog({
   const { data: pembayaran } = useGetPembayaran();
   const { data: penghuni } = useGetPenghuni();
 
-  const [rumahId, setRumahId] = useState<string | null>(
-    rumahIdInput != null ? String(rumahIdInput) : null,
-  );
+  const [rumahId, setRumahId] = useState<string | null>(null);
   const [totalTagihan, setTotalTagihan] = useState<number>(0);
 
-  const activeRumahId = rumahIdInput != null ? String(rumahIdInput) : rumahId;
+  const activeRumahId = rumahId;
   const { data: tagihan, isLoading: isLoadingTagihan } =
     useGetTagihanRumah(activeRumahId);
 
   const createPembayaranMutation = useCreatePembayaran();
   const updatePembayaranMutation = useUpdatePembayaran();
+  const queryClient = useQueryClient();
 
-  const isEdit = !!id;
+  const isEdit = useMemo(() => {
+    return !!pembayaran?.some((p) => String(p.id) === String(id));
+  }, [pembayaran, id]);
 
   const form = useForm({
     resolver: zodResolver(createPembayaranSchema),
     defaultValues: {
+      rumah_id: undefined,
       tagihan_ids: [],
       total_bayar: 0,
       tanggal_bayar: new Date().toISOString().split("T")[0],
@@ -90,33 +92,100 @@ export function PembayaranDialog({
   const metodeBayarWatch = useWatch({ control, name: "metode_pembayaran" });
 
   useEffect(() => {
-    if (isEdit && pembayaran && open) {
-      const selectedTagihan = tagihan?.find((t) => String(t.id) === String(id));
-      if (selectedTagihan) {
-        setValue("rumah_id", Number(selectedTagihan.rumah?.id));
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setRumahId(String(selectedTagihan.rumah?.id));
-
-        setValue(
-          "penghuni_id",
-          selectedTagihan.rumah?.penghuni_aktif
-            ? Number(selectedTagihan.rumah.penghuni_aktif.id)
-            : undefined,
-        );
-
-        setValue("tanggal_bayar", new Date().toISOString().split("T")[0]);
-
-        setValue("total_bayar", selectedTagihan.nominal_tagihan);
-
-        const tagihanIds = [selectedTagihan.id];
-        setValue("tagihan_ids", tagihanIds);
-      }
-    } else if (!open) {
+    if (!open) {
       reset();
       setRumahId(null);
       setTotalTagihan(0);
+      return;
     }
-  }, [id, isEdit, pembayaran, open, setValue, reset, tagihan, form]);
+
+    const selectedPembayaran = pembayaran?.find(
+      (p) => String(p.id) === String(id),
+    );
+    const selectedTagihan = tagihan?.find((t) => String(t.id) === String(id));
+
+    if (isEdit && selectedPembayaran) {
+      const rId = String(selectedPembayaran.rumah?.id);
+      if (rId && !isNaN(Number(rId))) {
+        setValue("rumah_id", Number(rId));
+        setRumahId(rId);
+      }
+
+      setValue(
+        "penghuni_id",
+        selectedPembayaran.penghuni?.id
+          ? Number(selectedPembayaran.penghuni.id)
+          : undefined,
+      );
+
+      setValue(
+        "tanggal_bayar",
+        selectedPembayaran.tanggal_bayar
+          ? new Date(selectedPembayaran.tanggal_bayar)
+              .toISOString()
+              .split("T")[0]
+          : new Date().toISOString().split("T")[0],
+      );
+
+      setValue("total_bayar", Number(selectedPembayaran.total_bayar) || 0);
+      setTotalTagihan(Number(selectedPembayaran.total_bayar) || 0);
+
+      setValue("metode_pembayaran", selectedPembayaran.metode_pembayaran || "");
+      setValue("catatan", selectedPembayaran.catatan || "");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tagihanIds =
+        selectedPembayaran.detail_alokasi?.map((d: any) => d.tagihan_id) || [];
+      setValue("tagihan_ids", tagihanIds);
+    } else if (!isEdit && selectedTagihan) {
+      const targetRumahId = selectedTagihan.rumah?.id
+        ? String(selectedTagihan.rumah.id)
+        : rumahIdInput
+          ? String(rumahIdInput)
+          : null;
+
+      if (targetRumahId && !isNaN(Number(targetRumahId))) {
+        setValue("rumah_id", Number(targetRumahId));
+        setRumahId(targetRumahId);
+
+        const currentHouse = rumah?.find((r) => String(r.id) === targetRumahId);
+        if (currentHouse?.penghuni_aktif?.id) {
+          setValue("penghuni_id", Number(currentHouse.penghuni_aktif.id));
+        } else {
+          setValue("penghuni_id", undefined);
+        }
+      }
+
+      setValue("tanggal_bayar", new Date().toISOString().split("T")[0]);
+      setValue("total_bayar", selectedTagihan.nominal_tagihan);
+      setTotalTagihan(selectedTagihan.nominal_tagihan);
+      setValue("tagihan_ids", [selectedTagihan.id]);
+    } else if (!isEdit && rumahIdInput) {
+      if (!isNaN(Number(rumahIdInput))) {
+        setRumahId(String(rumahIdInput));
+        setValue("rumah_id", Number(rumahIdInput));
+
+        const currentRumah = rumah?.find(
+          (r) => String(r.id) === String(rumahIdInput),
+        );
+        if (currentRumah?.penghuni_aktif?.id) {
+          setValue("penghuni_id", Number(currentRumah.penghuni_aktif.id));
+        } else {
+          setValue("penghuni_id", undefined);
+        }
+      }
+    }
+  }, [
+    id,
+    isEdit,
+    pembayaran,
+    tagihan,
+    rumah,
+    open,
+    rumahIdInput,
+    setValue,
+    reset,
+  ]);
 
   const submit = (data: CreatePembayaranDTO) => {
     const formData = new FormData();
@@ -139,7 +208,12 @@ export function PembayaranDialog({
       formData.append("tagihan_ids[]", String(tagihanId));
     });
 
-    const handleSuccess = () => {
+    const handleSuccess = async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["pembayaran"] }),
+        queryClient.invalidateQueries({ queryKey: ["tagihan"] }),
+      ]);
+
       toast.success(
         isEdit
           ? "Pembayaran berhasil diperbarui"
@@ -149,6 +223,7 @@ export function PembayaranDialog({
       reset();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleError = (err: any) => {
       const msg =
         err?.message ??
@@ -172,13 +247,15 @@ export function PembayaranDialog({
   const isPending =
     createPembayaranMutation.isPending || updatePembayaranMutation.isPending;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const groupedTagihan = tagihan?.reduce((acc: any, curr: any) => {
-    const namaIuran = curr.jenis_iuran?.nama_iuran || "Iuran Lainnya";
-    if (!acc[namaIuran]) acc[namaIuran] = [];
-    acc[namaIuran].push(curr);
-    return acc;
-  }, {});
+  const groupedTagihan = tagihan?.reduce(
+    (acc: Record<string, any[]>, curr: any) => {
+      const namaIuran = curr.jenis_iuran?.nama_iuran || "Iuran Lainnya";
+      if (!acc[namaIuran]) acc[namaIuran] = [];
+      acc[namaIuran].push(curr);
+      return acc;
+    },
+    {} as Record<string, any[]>,
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -209,9 +286,8 @@ export function PembayaranDialog({
                 name="rumah_id"
                 render={({ field }) => {
                   const selectedRumah = rumah?.find(
-                    (r) => r.id === String(field.value),
+                    (r) => String(r.id) === String(field.value),
                   );
-
                   const selectedPenghuni = penghuni?.find(
                     (p) => p.id === selectedRumah?.penghuni_aktif?.id,
                   );
@@ -219,17 +295,18 @@ export function PembayaranDialog({
                   return (
                     <Select
                       value={
-                        rumahIdInput != null
-                          ? String(rumahIdInput)
-                          : field.value
-                            ? String(field.value)
-                            : ""
+                        field.value && !isNaN(Number(field.value))
+                          ? String(field.value)
+                          : ""
                       }
+                      disabled={isEdit}
                       onValueChange={(value) => {
                         field.onChange(Number(value));
                         setRumahId(value);
 
-                        const currentRumah = rumah?.find((r) => r.id === value);
+                        const currentRumah = rumah?.find(
+                          (r) => String(r.id) === value,
+                        );
                         if (currentRumah?.penghuni_aktif?.id) {
                           setValue(
                             "penghuni_id",
@@ -247,28 +324,31 @@ export function PembayaranDialog({
                       <SelectTrigger className="mt-1.5">
                         <SelectValue placeholder="Pilih rumah">
                           {selectedRumah
-                            ? `${selectedRumah.blok_nomor} — ${
-                                selectedPenghuni?.nama_lengkap ??
-                                "Tidak ada penghuni aktif"
+                            ? `${selectedRumah.blok_nomor} ${
+                                selectedPenghuni?.nama_lengkap
+                                  ? `— ${selectedPenghuni.nama_lengkap}`
+                                  : "— (Kosong)"
                               }`
                             : undefined}
                         </SelectValue>
                       </SelectTrigger>
 
                       <SelectContent>
-                        {rumah
-                          ?.filter((r) => r.penghuni_aktif)
-                          .map((r) => {
-                            const p = penghuni?.find(
-                              (x) => x.id === r.penghuni_aktif?.id,
-                            );
+                        {/* Hapus filter .penghuni_aktif agar rumah kosong tetap bisa di-bayar tagihannya */}
+                        {rumah?.map((r) => {
+                          const p = penghuni?.find(
+                            (x) => x.id === r.penghuni_aktif?.id,
+                          );
 
-                            return (
-                              <SelectItem key={r.id} value={String(r.id)}>
-                                {r.blok_nomor} — {p?.nama_lengkap}
-                              </SelectItem>
-                            );
-                          })}
+                          return (
+                            <SelectItem key={r.id} value={String(r.id)}>
+                              {r.blok_nomor}{" "}
+                              {p?.nama_lengkap
+                                ? `— ${p.nama_lengkap}`
+                                : "— (Kosong)"}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                   );
@@ -286,13 +366,13 @@ export function PembayaranDialog({
                 <Label>
                   Iuran yang Dibayar <span className="text-red-500">*</span>
                 </Label>
-                {isLoadingTagihan && rumahId && (
+                {isLoadingTagihan && activeRumahId && (
                   <p className="text-sm text-muted-foreground mt-2">
                     Memuat tagihan...
                   </p>
                 )}
                 {!isLoadingTagihan &&
-                  rumahId &&
+                  activeRumahId &&
                   (tagihan?.length ?? 0) === 0 && (
                     <p className="text-sm text-amber-600 mt-2">
                       Tidak ada tagihan untuk rumah ini.
@@ -306,7 +386,7 @@ export function PembayaranDialog({
                     <div className="space-y-4 mt-3">
                       {groupedTagihan &&
                         Object.entries(groupedTagihan).map(
-                          ([groupName, items]: [string, any[]]) => {
+                          ([groupName, items]) => {
                             const groupIds = items.map((i) => i.id);
                             const currentIds = field.value || [];
                             const isAllGroupSelected =
@@ -316,7 +396,6 @@ export function PembayaranDialog({
                               groupIds.some((id) => currentIds.includes(id)) &&
                               !isAllGroupSelected;
 
-                            // Hitung total nilai nominal grup ini
                             const totalGroupNominal = items.reduce(
                               (sum, item) => sum + Number(item.nominal_tagihan),
                               0,
@@ -394,7 +473,6 @@ export function PembayaranDialog({
 
                                 <div className="space-y-2 pl-1">
                                   {items.map((item) => {
-                                    // Format string periode bulan jika ada datanya
                                     const monthNames = [
                                       "",
                                       "Jan",
@@ -410,10 +488,14 @@ export function PembayaranDialog({
                                       "Nov",
                                       "Des",
                                     ];
+
                                     const periodStr =
                                       item.periode_bulan && item.periode_tahun
-                                        ? `${monthNames[Number(item.periode_bulan)]} ${item.periode_tahun}`
-                                        : "";
+                                        ? `${monthNames[Number(item.periode_bulan)] || ""} ${item.periode_tahun}`.trim()
+                                        : item.periode || "";
+
+                                    const safeIuranName =
+                                      item.jenis_iuran?.nama_iuran || "";
 
                                     return (
                                       <div
@@ -458,8 +540,7 @@ export function PembayaranDialog({
                                             }}
                                           />
                                           <span className="text-sm">
-                                            {periodStr ||
-                                              item.jenis_iuran?.nama_iuran}
+                                            {periodStr || safeIuranName}
                                           </span>
                                         </div>
                                         <span className="text-sm font-medium">

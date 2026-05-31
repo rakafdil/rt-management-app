@@ -15,6 +15,8 @@ class StorePengeluaranRequest extends FormRequest
     {
         return [
             'kategori_id' => ['nullable', 'exists:kategori_pengeluaran,id'],
+            'nama_kategori' => ['nullable', 'string', 'max:100'],
+
             'deskripsi' => ['required', 'string'],
             'nominal' => ['required', 'numeric', 'min:1'],
             'tanggal_pengeluaran' => ['required', 'date'],

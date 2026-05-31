@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\KategoriPengeluaranController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,11 +34,11 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::apiResource('/tagihan', TagihanController::class);
+    Route::apiResource('pembayaran', PembayaranController::class)->only(['index', 'store', 'show']);
+    Route::apiResource('pengeluaran', PengeluaranController::class);
     Route::post('/tagihan/generate-manual', [TagihanController::class, 'generateManual']);
 
-    Route::apiResource('pembayaran', PembayaranController::class)->only(['index', 'store', 'show']);
-
-    Route::apiResource('pengeluaran', PengeluaranController::class);
+    Route::get('/kategori-pengeluaran/search', [KategoriPengeluaranController::class, 'search']);
 
     Route::prefix('reports')->group(function () {
         Route::get('/summary', [ReportController::class, 'summary']);

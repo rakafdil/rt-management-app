@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Report\GetReportRequest;
 use App\Services\ReportService;
-use App\Http\Requests\GetReportRequest;
+use App\Http\Requests;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

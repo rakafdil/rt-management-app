@@ -54,7 +54,7 @@ export default function PembayaranPage() {
 
   const [id, setId] = useState<number | null>(null);
   const [rumahId, setRumahId] = useState<number | null>(null);
-  
+
   const [filter, setFilter] = useState<string>("all");
 
   const filtered = useMemo(() => {
@@ -230,7 +230,7 @@ export default function PembayaranPage() {
                             onClick={() => {
                               if (
                                 window.confirm(
-                                  "Apakah Anda yakin ingin menghapus penghuni ini?",
+                                  "Apakah Anda yakin ingin menghapus tagihan ini?",
                                 )
                               )
                                 deleteTagihanMutation.mutate(

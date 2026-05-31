@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDB, formatRp, monthLabel } from "@/lib/store";
 import {
@@ -26,13 +25,15 @@ import { PageHeader } from "@/layouts/MainLayout";
 import { useGetPenghuni } from "@/features/penghuni/hooks/usePenghuni";
 import { useGetRumah } from "@/features/rumah/hooks/useRumah";
 import { useGetTagihan } from "@/features/pembayaran/hooks/useTagihan";
+import { useGetPembayaran } from "@/features/pembayaran/hooks/usePembayaran";
+import { useGetPengeluaran } from "@/features/pengeluaran/hooks/usePengeluaran";
 
 export function DashboardPage() {
-  const db = useDB();
-
   const { data: penghuni } = useGetPenghuni();
   const { data: rumah } = useGetRumah();
   const { data: tagihan } = useGetTagihan();
+  const { data: pembayaran } = useGetPembayaran();
+  const { data: pengeluaran } = useGetPengeluaran();
 
   const months = useMemo(() => {
     const now = new Date();
@@ -44,14 +45,41 @@ export function DashboardPage() {
 
   const chartData = useMemo(() => {
     let runningSaldo = 0;
+
     return months.map((ym) => {
-      const masuk = db.pembayaran
-        .filter((p) => p.periode === ym && p.status === "lunas")
-        .reduce((s, p) => s + p.nominal * p.jumlahBulan, 0);
-      const keluar = db.pengeluaran
-        .filter((p) => p.periode === ym)
-        .reduce((s, p) => s + p.nominal, 0);
+      const [year, month] = ym.split("-");
+
+      const masuk =
+        pembayaran?.reduce((acc, p) => {
+          if (!p.tanggal_bayar) return acc;
+
+          const d = new Date(p.tanggal_bayar);
+          if (
+            !isNaN(d.getTime()) &&
+            String(d.getFullYear()) === year &&
+            String(d.getMonth() + 1).padStart(2, "0") === month
+          ) {
+            return acc + Number(p.total_bayar || 0);
+          }
+          return acc;
+        }, 0) ?? 0;
+
+      const keluar =
+        pengeluaran?.reduce((acc, p) => {
+          if (!p.tanggal_pengeluaran) return acc;
+
+          const d = new Date(p.tanggal_pengeluaran);
+          if (
+            !isNaN(d.getTime()) &&
+            String(d.getFullYear()) === year &&
+            String(d.getMonth() + 1).padStart(2, "0") === month
+          ) {
+            return acc + Number(p.nominal || 0);
+          }
+          return acc;
+        }, 0) ?? 0;
       runningSaldo += masuk - keluar;
+
       return {
         bulan: monthLabel(ym).split(" ")[0],
         Pemasukan: masuk,
@@ -59,13 +87,28 @@ export function DashboardPage() {
         Saldo: runningSaldo,
       };
     });
-  }, [db, months]);
+  }, [pengeluaran, months, pembayaran]);
 
-  const totalMasuk = chartData.reduce((s, x) => s + x.Pemasukan, 0);
-  const totalKeluar = chartData.reduce((s, x) => s + x.Pengeluaran, 0);
+  const totalMasuk = chartData.reduce(
+    (s, x) => s + (Number(x.Pemasukan) || 0),
+    0,
+  );
+  const totalKeluar = chartData.reduce(
+    (s, x) => s + (Number(x.Pengeluaran) || 0),
+    0,
+  );
   const saldo = totalMasuk - totalKeluar;
-  const rumahDihuni = rumah?.filter((r) => r.penghuni_aktif).length;
-  const tunggakan = tagihan?.filter((t) => t.status_pembayaran === "belum_bayar" || t.status_pembayaran === "sebagian").length;
+
+  const rumahDihuni = rumah?.filter((r) => r.penghuni_aktif).length ?? 0;
+  const rumahTotal = rumah?.length ?? 1;
+  const presentaseDihuni = (rumahDihuni / Math.max(rumahTotal, 1)) * 100;
+
+  const tunggakan =
+    tagihan?.filter(
+      (t) =>
+        t.status_pembayaran === "belum_bayar" ||
+        t.status_pembayaran === "sebagian",
+    ).length ?? 0;
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
@@ -112,15 +155,13 @@ export function DashboardPage() {
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-semibold">{rumahDihuni}</span>
               <span className="text-muted-foreground text-sm">
-                / {rumah?.length} dihuni
+                / {rumahTotal} dihuni
               </span>
             </div>
             <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-accent"
-                style={{
-                  width: `${(rumahDihuni ?? 0 / db.rumah.length) * 100}%`,
-                }}
+                className="h-full bg-accent transition-all duration-500 ease-in-out"
+                style={{ width: `${presentaseDihuni}%` }}
               />
             </div>
             <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
@@ -130,7 +171,7 @@ export function DashboardPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Home className="h-4 w-4 text-muted-foreground" />
-                Kosong: {(rumah?.length ?? 0) - (rumahDihuni ?? 0)}
+                Kosong: {Math.max(0, rumahTotal - rumahDihuni)}
               </div>
             </div>
           </CardContent>
@@ -144,22 +185,23 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-semibold">{penghuni?.length}</span>
+              <span className="text-3xl font-semibold">
+                {penghuni?.length ?? 0}
+              </span>
               <span className="text-muted-foreground text-sm">terdaftar</span>
             </div>
             <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-accent" />
                 Tetap:{" "}
-                {penghuni?.filter((p) => p.status_penghuni === "tetap").length}
+                {penghuni?.filter((p) => p.status_penghuni === "tetap")
+                  .length ?? 0}
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 Kontrak:{" "}
-                {
-                  penghuni?.filter((p) => p.status_penghuni === "kontrak")
-                    .length
-                }
+                {penghuni?.filter((p) => p.status_penghuni === "kontrak")
+                  .length ?? 0}
               </div>
             </div>
           </CardContent>
@@ -179,9 +221,9 @@ export function DashboardPage() {
               )}
             </div>
             <div className="text-xs text-muted-foreground mt-2">
-              Masuk {formatRp(chartData[chartData.length - 1]?.Pemasukan || 0)}{" "}
+              Masuk {formatRp(chartData[chartData.length - 1]?.Pemasukan ?? 0)}{" "}
               • Keluar{" "}
-              {formatRp(chartData[chartData.length - 1]?.Pengeluaran || 0)}
+              {formatRp(chartData[chartData.length - 1]?.Pengeluaran ?? 0)}
             </div>
           </CardContent>
         </Card>

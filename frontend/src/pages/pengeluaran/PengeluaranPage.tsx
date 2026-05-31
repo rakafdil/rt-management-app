@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/layouts/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,39 +19,103 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useDB, store, formatRp, monthLabel } from "@/lib/store";
+import { formatRp } from "@/lib/formatters";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  useCreatePengeluaran,
+  useDeletePengeluaran,
+  useGetPengeluaran,
+} from "@/features/pengeluaran/hooks/usePengeluaran";
+import { Loading } from "@/components/Loading";
+import { useForm, useWatch } from "react-hook-form";
+import { KategoriPengeluaranSearch } from "@/features/pengeluaran/components/PencarianKategori";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createPengeluaranSchema,
+  type CreatePengeluaranDTO,
+} from "@/features/pengeluaran/types";
+import { z } from "zod";
 
-export default function PengeluaranPage() {
-  const { pengeluaran } = useDB();
-  const [open, setOpen] = useState(false);
-  const today = new Date().toISOString().slice(0, 10);
-  const [form, setForm] = useState({
-    kategori: "",
+function getDefaultValues(): CreatePengeluaranDTO {
+  return {
+    kategori_id: null,
+    nama_kategori: "",
     deskripsi: "",
     nominal: 0,
-    tanggal: today,
-    periode: today.slice(0, 7),
+    tanggal_pengeluaran: new Date().toISOString().split("T")[0],
+  };
+}
+
+export default function PengeluaranPage() {
+  const { data: pengeluaran, isLoading } = useGetPengeluaran();
+  const createPengeluaranMutation = useCreatePengeluaran();
+  const deletePengeluaranMutation = useDeletePengeluaran();
+
+  const [open, setOpen] = useState(false);
+
+  const form = useForm<
+    z.input<typeof createPengeluaranSchema>,
+    undefined,
+    CreatePengeluaranDTO
+  >({
+    resolver: zodResolver(createPengeluaranSchema),
+    defaultValues: getDefaultValues(),
   });
 
-  const sorted = pengeluaran.slice().sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = form;
 
-  function submit() {
-    if (!form.kategori || form.nominal <= 0) {
-      toast.error("Kategori & nominal wajib");
-      return;
+  const kategoriId = useWatch({ control, name: "kategori_id" });
+  const namaKategori = useWatch({ control, name: "nama_kategori" });
+  const nominal = useWatch({ control, name: "nominal" }) as number | undefined;
+  const selectedKategoriId = kategoriId as number | null | undefined;
+
+  useEffect(() => {
+    if (!open) {
+      reset(getDefaultValues());
     }
-    store.addPengeluaran(form);
-    toast.success("Pengeluaran dicatat");
-    setOpen(false);
-    setForm({
-      kategori: "",
-      deskripsi: "",
-      nominal: 0,
-      tanggal: today,
-      periode: today.slice(0, 7),
+  }, [open, reset]);
+
+  const sorted = pengeluaran
+    ?.slice()
+    .sort((a, b) => b.tanggal_pengeluaran.localeCompare(a.tanggal_pengeluaran));
+
+  const onSubmit = (data: CreatePengeluaranDTO) => {
+    const formData = new FormData();
+
+    if (data.kategori_id != null) {
+      formData.append("kategori_id", String(data.kategori_id));
+    }
+
+    if (data.nama_kategori?.trim()) {
+      formData.append("nama_kategori", data.nama_kategori.trim());
+    }
+
+    formData.append("deskripsi", data.deskripsi.trim());
+    formData.append("nominal", String(data.nominal));
+    formData.append("tanggal_pengeluaran", data.tanggal_pengeluaran);
+
+    createPengeluaranMutation.mutate(formData, {
+      onSuccess: () => {
+        toast.success("Pengeluaran dicatat");
+        setOpen(false);
+        reset(getDefaultValues());
+      },
+      onError: () => {
+        toast.error("Gagal mencatat pengeluaran");
+      },
     });
+  };
+
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -72,7 +136,6 @@ export default function PengeluaranPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Tanggal</TableHead>
-                <TableHead>Periode</TableHead>
                 <TableHead>Kategori</TableHead>
                 <TableHead>Deskripsi</TableHead>
                 <TableHead>Nominal</TableHead>
@@ -80,27 +143,48 @@ export default function PengeluaranPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sorted.length === 0 && (
+              {sorted?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center text-muted-foreground py-10"
+                  >
                     Belum ada pengeluaran
                   </TableCell>
                 </TableRow>
               )}
-              {sorted.map((p) => (
+              {sorted?.map((p) => (
                 <TableRow key={p.id}>
-                  <TableCell className="font-mono text-xs">{p.tanggal}</TableCell>
-                  <TableCell>{monthLabel(p.periode)}</TableCell>
-                  <TableCell className="font-medium">{p.kategori}</TableCell>
-                  <TableCell className="text-muted-foreground">{p.deskripsi}</TableCell>
-                  <TableCell className="font-medium">{formatRp(p.nominal)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="font-mono text-xs">
+                    {p.tanggal_pengeluaran}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {p.kategori?.nama_kategori}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {p.deskripsi}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {formatRp(p.nominal)}
+                  </TableCell>
+                  <TableCell className="text-right text-destructive">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => {
-                        store.deletePengeluaran(p.id);
-                        toast.success("Dihapus");
+                        if (
+                          window.confirm(
+                            "Apakah Anda yakin ingin menghapus tagihan ini?",
+                          )
+                        )
+                          deletePengeluaranMutation.mutate(p.id, {
+                            onSuccess: () => {
+                              toast.success("Pengeluaran berhasil dihapus");
+                            },
+                            onError: () => {
+                              toast.error("Pengeluaran gagal dihapus");
+                            },
+                          });
                       }}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -118,65 +202,98 @@ export default function PengeluaranPage() {
           <DialogHeader>
             <DialogTitle>Tambah Pengeluaran</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Label>Kategori</Label>
-              <Input
-                value={form.kategori}
-                onChange={(e) => setForm({ ...form, kategori: e.target.value })}
-                placeholder="Mis. Perbaikan jalan"
-                className="mt-1.5"
+              <KategoriPengeluaranSearch
+                value={{
+                  kategori_id: selectedKategoriId ?? null,
+                  nama_kategori: namaKategori,
+                }}
+                onChange={(val) => {
+                  setValue("kategori_id", val.kategori_id ?? null, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                  setValue("nama_kategori", val.nama_kategori ?? "", {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
               />
+              {errors.nama_kategori && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.nama_kategori.message}
+                </p>
+              )}
             </div>
+
             <div>
               <Label>Deskripsi</Label>
               <Input
-                value={form.deskripsi}
-                onChange={(e) => setForm({ ...form, deskripsi: e.target.value })}
+                {...register("deskripsi")}
+                className="mt-1.5"
+                placeholder="Misal: Beli lampu jalan"
+              />
+              {errors.deskripsi && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.deskripsi.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label>Tanggal</Label>
+              <Input
+                type="date"
+                {...register("tanggal_pengeluaran")}
                 className="mt-1.5"
               />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Periode</Label>
-                <Input
-                  type="month"
-                  value={form.periode}
-                  onChange={(e) => setForm({ ...form, periode: e.target.value })}
-                  className="mt-1.5"
-                />
-              </div>
-              <div>
-                <Label>Tanggal</Label>
-                <Input
-                  type="date"
-                  value={form.tanggal}
-                  onChange={(e) => setForm({ ...form, tanggal: e.target.value })}
-                  className="mt-1.5"
-                />
-              </div>
+              {errors.tanggal_pengeluaran && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.tanggal_pengeluaran.message}
+                </p>
+              )}
             </div>
             <div>
               <Label>Nominal (Rp)</Label>
               <Input
-                type="number"
-                value={form.nominal || ""}
-                onChange={(e) =>
-                  setForm({ ...form, nominal: parseInt(e.target.value) || 0 })
+                type="text"
+                value={
+                  nominal
+                    ? new Intl.NumberFormat("id-ID").format(Number(nominal))
+                    : ""
                 }
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  setValue("nominal", value ? Number(value) : 0);
+                }}
                 className="mt-1.5"
               />
+              {errors.nominal && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.nominal.message}
+                </p>
+              )}
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Batal
-            </Button>
-            <Button onClick={submit}>Simpan</Button>
-          </DialogFooter>
+            <DialogFooter className="pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={createPengeluaranMutation.isPending}
+              >
+                Simpan
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-
