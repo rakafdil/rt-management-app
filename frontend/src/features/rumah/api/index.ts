@@ -6,6 +6,7 @@ import {
   type UnassignRumahDTO,
 } from "../types";
 import { api } from "@/lib/axios";
+import type { Tagihan } from "@/features/pembayaran/types";
 
 export const rumahApi = createCrudApi<Rumah, FormData>("rumah");
 
@@ -28,4 +29,9 @@ export const historiHuniApi = (rumah_id: string) => {
       return response.data.data;
     },
   };
+};
+
+export const tagihanRumahApi = async (rumah_id: string | null): Promise<Tagihan[]> => {
+  const response = await api.get(`rumah/${rumah_id}/tagihan`);
+  return response.data.data;
 };

@@ -1,5 +1,5 @@
 import { createCrudHooks } from "@/lib/useCrudHooks";
-import { historiHuniApi, rumahApi } from "../api";
+import { historiHuniApi, rumahApi, tagihanRumahApi } from "../api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AssignRumahDTO, UnassignRumahDTO } from "../types";
 
@@ -17,6 +17,14 @@ export const useGetHistoriRumah = (rumahId: string) => {
   return useQuery({
     queryKey: ["rumah", rumahId, "histori"],
     queryFn: () => historiHuniApi(rumahId).get(),
+  });
+};
+
+export const useGetTagihanRumah = (rumahId: string | null) => {
+  return useQuery({
+    queryKey: ["rumah", rumahId, "tagihan"],
+    queryFn: () => tagihanRumahApi(rumahId),
+    enabled: rumahId !== null,
   });
 };
 
@@ -38,7 +46,10 @@ export const useAssignPenghuni = (rumahId: string, data: AssignRumahDTO) => {
   });
 };
 
-export const useUnassignPenghuni = (rumahId: string, data: UnassignRumahDTO) => {
+export const useUnassignPenghuni = (
+  rumahId: string,
+  data: UnassignRumahDTO,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({

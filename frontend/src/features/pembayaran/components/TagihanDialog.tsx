@@ -18,25 +18,34 @@ import {
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useGetRumah } from "@/features/rumah/hooks/useRumah";
-import { useCreateTagihan, useGetTagihan } from "../hooks/useTagihan";
+import {
+  useCreateTagihan,
+  useGetTagihan,
+  useUpdateTagihan,
+} from "../hooks/useTagihan";
 import { useGetPenghuni } from "@/features/penghuni/hooks/usePenghuni";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTagihanSchema, type CreateTagihanDTO } from "../types";
 import { Loader2 } from "lucide-react";
 
-export function TambahTagihanDialog({
+export function TagihanDialog({
   open,
   onOpenChange,
+  id,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
+  id?: string | number | null;
 }) {
   const { data: rumah } = useGetRumah();
   const { data: tagihan } = useGetTagihan();
   const { data: penghuni } = useGetPenghuni();
 
   const createTagihanMutation = useCreateTagihan();
+  const updateTagihanMutation = useUpdateTagihan();
+
+  const isEdit = !!id;
 
   const form = useForm<CreateTagihanDTO>({
     resolver: zodResolver(createTagihanSchema),
@@ -55,15 +64,37 @@ export function TambahTagihanDialog({
     name: "jenis_iuran_id",
   });
 
+  const periodeTahun = useWatch({ control, name: "periode_tahun" });
+  const periodeBulan = useWatch({ control, name: "periode_bulan" });
+  const monthValue =
+    periodeTahun && periodeBulan
+      ? `${periodeTahun}-${String(periodeBulan).padStart(2, "0")}`
+      : "";
+
+  useEffect(() => {
+    if (isEdit && tagihan && open) {
+      const selectedTagihan = tagihan.find((t) => String(t.id) === String(id));
+      if (selectedTagihan) {
+        setValue("rumah_id", Number(selectedTagihan.rumah?.id));
+        setValue("jenis_iuran_id", Number(selectedTagihan.jenis_iuran?.id));
+        setValue("nominal_tagihan", selectedTagihan.nominal_tagihan);
+        setValue("periode_tahun", selectedTagihan.periode_tahun);
+        setValue("periode_bulan", selectedTagihan.periode_bulan);
+      }
+    } else if (!open) {
+      reset();
+    }
+  }, [id, isEdit, tagihan, open, setValue, reset]);
+
   useEffect(() => {
     const jenisIuran = uniqueJenisIuran.find(
       (u) => u?.id === Number(selectedJenisIuranId),
     );
 
-    if (jenisIuran) {
+    if (jenisIuran && !isEdit) {
       setValue("nominal_tagihan", jenisIuran.nominal_default);
     }
-  }, [selectedJenisIuranId, uniqueJenisIuran, setValue]);
+  }, [selectedJenisIuranId, uniqueJenisIuran, setValue, isEdit]);
 
   const submit = (data: CreateTagihanDTO) => {
     if (!data.rumah_id) {
@@ -88,30 +119,51 @@ export function TambahTagihanDialog({
       formData.append(key, String(value));
     });
 
-    createTagihanMutation.mutate(formData, {
-      onSuccess() {
-        toast.success("Tagihan dicatat");
-        onOpenChange(false);
-        reset();
-      },
-      onError(err) {
-        const msg = err?.message ?? "Gagal menambahkan tagihan";
-        toast.error(msg);
-      },
-    });
+    const handleSuccess = () => {
+      toast.success(isEdit ? "Tagihan berhasil diperbarui" : "Tagihan dicatat");
+      onOpenChange(false);
+      reset();
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleError = (err: any) => {
+      const msg =
+        err?.message ??
+        `Gagal ${isEdit ? "memperbarui" : "menambahkan"} tagihan`;
+      toast.error(msg);
+    };
+
+    if (isEdit) {
+      updateTagihanMutation.mutate(
+        { id, data: formData },
+        { onSuccess: handleSuccess, onError: handleError },
+      );
+    } else {
+      createTagihanMutation.mutate(formData, {
+        onSuccess: handleSuccess,
+        onError: handleError,
+      });
+    }
   };
+
+  const isPending =
+    createTagihanMutation.isPending || updateTagihanMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <form
           onSubmit={handleSubmit(submit, (errors) => {
-            const msg = errors?.form?.message ?? "Gagal menambahkan tagihan";
+            const msg =
+              errors?.form?.message ??
+              `Gagal ${isEdit ? "memperbarui" : "menambahkan"} tagihan`;
             toast.error(msg);
           })}
         >
           <DialogHeader>
-            <DialogTitle>Tambahkan Tagihan</DialogTitle>
+            <DialogTitle>
+              {isEdit ? "Edit Tagihan" : "Tambahkan Tagihan"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 w-full my-4">
             <div>
@@ -202,6 +254,7 @@ export function TambahTagihanDialog({
               <Input
                 type="month"
                 className="mt-1.5 w-full text-center [&::-webkit-datetime-edit]:text-center"
+                value={monthValue} // <-- Binding value agar form edit menampilkan periode
                 onChange={(e) => {
                   const [year, month] = e.target.value.split("-");
 
@@ -212,12 +265,16 @@ export function TambahTagihanDialog({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => onOpenChange(false)}
+            >
               Batal
             </Button>
-            <Button type="submit" disabled={createTagihanMutation.isPending}>
-              {createTagihanMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {createTagihanMutation.isPending ? "Menyimpan..." : "Simpan"}
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending ? "Menyimpan..." : "Simpan"}
             </Button>
           </DialogFooter>
         </form>

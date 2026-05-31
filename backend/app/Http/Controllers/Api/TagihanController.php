@@ -107,7 +107,15 @@ class TagihanController extends Controller
 
     public function update(UpdateTagihanRequest $request, Tagihan $tagihan)
     {
-        $tagihan->update($request->validated());
+        $validatedData = $request->validated();
+
+        if (!isset($validatedData['nominal_tagihan'])) {
+            $jenisIuran = JenisIuran::findOrFail($validatedData['jenis_iuran_id']);
+
+            $validatedData['nominal_tagihan'] = $jenisIuran->nominal_default;
+        }
+
+        $tagihan->update($validatedData);
 
         return response()->json([
             'message' => 'Tagihan berhasil diperbarui.',

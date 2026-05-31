@@ -19,14 +19,14 @@ class PaymentService
     public function processPayment(array $data)
     {
         return DB::transaction(function () use ($data) {
-            
+
             $pembayaran = Pembayaran::create([
-                'rumah_id'          => $data['rumah_id'],
-                'penghuni_id'       => $data['penghuni_id'] ?? null,
-                'tanggal_bayar'     => $data['tanggal_bayar'],
-                'total_bayar'       => $data['total_bayar'],
+                'rumah_id' => $data['rumah_id'],
+                'penghuni_id' => $data['penghuni_id'] ?? null,
+                'tanggal_bayar' => $data['tanggal_bayar'],
+                'total_bayar' => $data['total_bayar'],
                 'metode_pembayaran' => $data['metode_pembayaran'] ?? 'Tunai',
-                'catatan'           => $data['catatan'] ?? null,
+                'catatan' => $data['catatan'] ?? null,
             ]);
 
             $saldoPemasukan = (float) $data['total_bayar'];
@@ -35,7 +35,7 @@ class PaymentService
                 ->where('status_pembayaran', '!=', 'lunas')
                 ->orderBy('periode_tahun', 'asc')
                 ->orderBy('periode_bulan', 'asc')
-                ->lockForUpdate() 
+                ->lockForUpdate()
                 ->get();
 
             if ($tagihanList->isEmpty()) {
@@ -43,18 +43,20 @@ class PaymentService
             }
 
             foreach ($tagihanList as $tagihan) {
-                if ($saldoPemasukan <= 0) break;
+                if ($saldoPemasukan <= 0)
+                    break;
 
                 $sudahDibayar = DetailPembayaran::where('tagihan_id', $tagihan->id)->sum('nominal_alokasi');
                 $sisaTagihan = $tagihan->nominal_tagihan - $sudahDibayar;
 
-                if ($sisaTagihan <= 0) continue;
+                if ($sisaTagihan <= 0)
+                    continue;
 
                 $alokasi = min($saldoPemasukan, $sisaTagihan);
 
                 DetailPembayaran::create([
-                    'pembayaran_id'   => $pembayaran->id,
-                    'tagihan_id'      => $tagihan->id,
+                    'pembayaran_id' => $pembayaran->id,
+                    'tagihan_id' => $tagihan->id,
                     'nominal_alokasi' => $alokasi,
                 ]);
 
@@ -63,7 +65,7 @@ class PaymentService
                 $sisaTagihanBaru = $sisaTagihan - $alokasi;
 
                 Tagihan::where('id', $tagihan->id)->update([
-                    'status_pembayaran' => $sisaTagihanBaru <= 0 ? 'lunas' : 'sebagian'
+                    'status_pembayaran' => $sisaTagihanBaru <= 0 ? 'lunas' : 'sebagian',
                 ]);
             }
 

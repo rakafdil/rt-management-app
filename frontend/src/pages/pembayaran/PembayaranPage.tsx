@@ -13,14 +13,33 @@ import {
 } from "@/components/ui/table";
 
 import { formatRp } from "@/lib/formatters";
-import { Plus, Trash2, CheckCircle2 } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  CheckCircle2,
+  MoreHorizontal,
+  Pencil,
+  DollarSign,
+} from "lucide-react";
 import { toast } from "sonner";
-import { TambahTagihanDialog } from "@/features/pembayaran/components/TambahTagihanDialog";
-import { useGetTagihan } from "@/features/pembayaran/hooks/useTagihan";
+import { TagihanDialog } from "@/features/pembayaran/components/TagihanDialog";
+import {
+  useDeleteTagihan,
+  useGetTagihan,
+} from "@/features/pembayaran/hooks/useTagihan";
 import { Loading } from "@/components/Loading";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { PembayaranDialog } from "@/features/pembayaran/components/PembayaranDialog";
 
 export default function PembayaranPage() {
   const { data: tagihan, isLoading } = useGetTagihan();
+
+  const deleteTagihanMutation = useDeleteTagihan();
 
   const toTime = (value: Date | string | number): string => {
     const date = value instanceof Date ? value : new Date(value);
@@ -30,7 +49,12 @@ export default function PembayaranPage() {
     return `${day}-${month}-${year}`;
   };
 
-  const [open, setOpen] = useState(false);
+  const [openTagihan, setOpenTagihan] = useState(false);
+  const [openPembayaran, setOpenPembayaran] = useState(false);
+
+  const [id, setId] = useState<number | null>(null);
+  const [rumahId, setRumahId] = useState<number | null>(null);
+  
   const [filter, setFilter] = useState<string>("all");
 
   const filtered = useMemo(() => {
@@ -48,19 +72,35 @@ export default function PembayaranPage() {
     return arr;
   }, [tagihan, filter]);
 
-  if (isLoading){
-    return <Loading/>
+  if (isLoading) {
+    return <Loading />;
   }
-  
+
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <PageHeader
         title="Pembayaran"
         description="Catat dan kelola tagihan iuran satpam & kebersihan"
         action={
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="h-4 w-4" /> Tambah Tagihan
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                setOpenPembayaran(true);
+                setId(null);
+                setRumahId(null);
+              }}
+            >
+              <DollarSign className="h-4 w-4" /> Tambah Pembayaran
+            </Button>
+            <Button
+              onClick={() => {
+                setOpenTagihan(true);
+                setId(null);
+              }}
+            >
+              <Plus className="h-4 w-4" /> Tambah Tagihan
+            </Button>
+          </div>
         }
       />
 
@@ -128,7 +168,9 @@ export default function PembayaranPage() {
                     <TableCell className="font-medium">
                       {tagihanRecord.rumah?.blok_nomor}
                     </TableCell>
-                    <TableCell>{tagihanRecord.rumah?.penghuni_aktif?.nama_lengkap}</TableCell>
+                    <TableCell>
+                      {tagihanRecord.rumah?.penghuni_aktif?.nama_lengkap}
+                    </TableCell>
                     <TableCell className="capitalize">
                       {tagihanRecord.jenis_iuran?.nama_iuran}
                     </TableCell>
@@ -137,10 +179,7 @@ export default function PembayaranPage() {
                       {monthDiff > 0 && ` (${monthDiff} bln lalu)`}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {formatRp(
-                        tagihanRecord.nominal_tagihan *
-                          tagihanRecord.periode_bulan,
-                      )}
+                      {formatRp(tagihanRecord.nominal_tagihan)}
                     </TableCell>
                     <TableCell>
                       {tagihanRecord.status_pembayaran === "lunas" ? (
@@ -152,26 +191,66 @@ export default function PembayaranPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      {tagihanRecord.status_pembayaran === "belum_bayar" && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            toast.success("Ditandai lunas");
-                          }}
-                        >
-                          <CheckCircle2 className="h-4 w-4 text-[oklch(0.62_0.15_155)]" />
-                        </Button>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          toast.success("Pembayaran dihapus");
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end">
+                          {tagihanRecord.status_pembayaran ===
+                            "belum_bayar" && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setOpenPembayaran(true);
+                                setId(tagihanRecord?.id);
+                                setRumahId(tagihanRecord.rumah?.id ?? null);
+                              }}
+                              className="text-success"
+                            >
+                              <CheckCircle2 className="mr-2 h-4 w-4" />
+                              Bayar
+                            </DropdownMenuItem>
+                          )}
+
+                          <DropdownMenuItem
+                            className="text-foreground"
+                            onClick={() => {
+                              setOpenTagihan(true);
+                              setId(tagihanRecord?.id);
+                            }}
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Edit Tagihan
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  "Apakah Anda yakin ingin menghapus penghuni ini?",
+                                )
+                              )
+                                deleteTagihanMutation.mutate(
+                                  tagihanRecord?.id || String(tagihanRecord.id),
+                                  {
+                                    onSuccess: () => {
+                                      toast.success("Tagihan berhasil dihapus");
+                                    },
+                                    onError: () => {
+                                      toast.error("Tagihan gagal dihapus");
+                                    },
+                                  },
+                                );
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Hapus
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 );
@@ -181,7 +260,13 @@ export default function PembayaranPage() {
         </CardContent>
       </Card>
 
-      <TambahTagihanDialog open={open} onOpenChange={setOpen} />
+      <TagihanDialog open={openTagihan} onOpenChange={setOpenTagihan} id={id} />
+      <PembayaranDialog
+        open={openPembayaran}
+        onOpenChange={setOpenPembayaran}
+        id={id}
+        rumahIdInput={rumahId}
+      />
     </div>
   );
 }
