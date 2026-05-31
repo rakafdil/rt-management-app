@@ -34,4 +34,13 @@ class Penghuni extends Model
     {
         return $this->hasMany(Pembayaran::class, 'penghuni_id');
     }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Penghuni $penghuni) {
+            $penghuni->historiHuni()
+                ->whereNull('tanggal_selesai')
+                ->update(['tanggal_selesai' => now()]);
+        });
+    }
 }

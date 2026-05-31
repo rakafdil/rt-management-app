@@ -8,10 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
-    /**
-     * Mendapatkan summary untuk grafik 1 tahun.
-     * Mengembalikan array berisi 12 bulan dengan total pemasukan, pengeluaran, dan saldo kumulatif.
-     */
     public function getYearlySummary(int $year)
     {
         $pemasukan = Pembayaran::select(
@@ -60,12 +56,9 @@ class ReportService
         ];
     }
 
-    /**
-     * Mendapatkan rincian transaksi (Pemasukan & Pengeluaran) pada bulan dan tahun tertentu
-     */
     public function getMonthlyDetail(int $month, int $year)
     {
-        $listPemasukan = Pembayaran::with(['rumah', 'penghuni'])
+        $listPemasukan = Pembayaran::with(['rumah', 'penghuni', 'detailPembayaran', 'detailPembayaran.tagihan'])
             ->whereMonth('tanggal_bayar', $month)
             ->whereYear('tanggal_bayar', $year)
             ->orderBy('tanggal_bayar', 'asc')

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useDB, formatRp, monthLabel } from "@/lib/store";
+import { formatRp, monthLabel } from "@/lib/formatters";
 import {
   ResponsiveContainer,
   BarChart,

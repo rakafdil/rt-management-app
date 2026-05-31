@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GetMonthlyLaporanResource;
+use App\Http\Resources\GetYearlyLaporanResource;
 use App\Http\Requests\Report\GetReportRequest;
 use App\Services\ReportService;
-use App\Http\Requests;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -27,7 +28,7 @@ class ReportController extends Controller
 
         return response()->json([
             'message' => 'Berhasil mengambil summary laporan keuangan tahun ' . $year,
-            'data' => $data
+            'data' => new GetYearlyLaporanResource($data)
         ]);
     }
 
@@ -43,7 +44,7 @@ class ReportController extends Controller
 
         return response()->json([
             'message' => 'Berhasil mengambil rincian transaksi periode ' . $validated['bulan'] . '/' . $validated['tahun'],
-            'data' => $data
+            'data' => new GetMonthlyLaporanResource($data)
         ]);
     }
 }
