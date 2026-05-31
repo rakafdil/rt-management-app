@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatRp, monthLabel } from "@/lib/formatters";
+import { formatRp } from "@/lib/formatters";
 import {
   TrendingUp,
   TrendingDown,
@@ -24,6 +24,7 @@ import {
   useMonthlyLaporan,
   useYearlyLaporan,
 } from "@/features/laporan/hooks/useLaporan";
+import { formatPeriode } from "@/lib/rumah";
 
 type ViewMode = "monthly" | "yearly";
 
@@ -186,7 +187,7 @@ export default function LaporanPage() {
               <CardContent className="pt-6 flex items-start justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">
-                    Saldo {monthLabel(String(periode.bulan))}
+                    Saldo {formatPeriode(periode.bulan, periode.tahun)}
                   </div>
                   <div
                     className={`text-2xl font-semibold mt-2 ${
@@ -298,7 +299,7 @@ export default function LaporanPage() {
                           {p.kategori?.nama_kategori}
                         </TableCell>
                         <TableCell
-                          className="text-muted-foreground line-clamp-1 max-w-[200px]"
+                          className="text-muted-foreground max-w-[200px]"
                           title={p.deskripsi}
                         >
                           {p.deskripsi}

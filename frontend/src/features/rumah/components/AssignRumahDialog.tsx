@@ -39,7 +39,7 @@ interface Props {
 
 export function AssignRumahDialog({ rumahId, disabled = false }: Props) {
   const [open, setOpen] = useState(false);
-  const { data: penghuniList = [], isLoading } = useGetPenghuni();
+  const { data: penghuniList, isLoading } = useGetPenghuni();
   const assignMutation = useAssignPenghuni(rumahId);
 
   const {
@@ -77,10 +77,6 @@ export function AssignRumahDialog({ rumahId, disabled = false }: Props) {
     });
   };
 
-  const sortedPenghuni = penghuniList.slice().sort((a, b) =>
-    a.nama_lengkap.localeCompare(b.nama_lengkap),
-  );
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Button
@@ -104,32 +100,33 @@ export function AssignRumahDialog({ rumahId, disabled = false }: Props) {
 
         <form onSubmit={handleSubmit(handleAssign)} className="space-y-4">
           <div>
-            <Label>
-              Penghuni <span className="text-red-500">*</span>
-            </Label>
+                <Label>Penghuni Aktif</Label>
+                <Controller
+                  control={control}
+                  name="penghuni_id"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ?? "none"}
+                      onValueChange={(value) =>
+                        field.onChange(value === "none" ? undefined : value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih penghuni" />
+                      </SelectTrigger>
 
-            <Controller
-              control={control}
-              name="penghuni_id"
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={isLoading || sortedPenghuni.length === 0}
-                >
-                  <SelectTrigger className="mt-1.5">
-                    <SelectValue placeholder="Pilih penghuni" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortedPenghuni.map((penghuni) => (
-                      <SelectItem key={penghuni.id} value={penghuni.id}>
-                        {penghuni.nama_lengkap}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+                      <SelectContent className="max-h-100 overflow-y-scroll">
+                        <SelectItem value="none">Tidak ada penghuni</SelectItem>
+
+                        {penghuniList?.filter((p) => p.rumah_aktif === null).map((p) => (
+                          <SelectItem key={p.id} value={String(p.id)}>
+                            {p.nama_lengkap}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
 
             {errors.penghuni_id && (
               <p className="mt-1 text-xs text-red-500">

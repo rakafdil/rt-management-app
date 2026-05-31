@@ -91,7 +91,7 @@ export function TagihanDialog({
       (u) => u?.id === Number(selectedJenisIuranId),
     );
 
-    if (jenisIuran && !isEdit) {
+    if (jenisIuran) {
       setValue("nominal_tagihan", jenisIuran.nominal_default);
     }
   }, [selectedJenisIuranId, uniqueJenisIuran, setValue, isEdit]);
@@ -193,7 +193,7 @@ export function TagihanDialog({
                         </SelectValue>
                       </SelectTrigger>
 
-                      <SelectContent>
+                      <SelectContent className="max-h-100 overflow-y-scroll">
                         {rumah
                           ?.filter((r) => r.penghuni_aktif)
                           .map((r) => {
@@ -227,7 +227,7 @@ export function TagihanDialog({
                       <SelectTrigger className="mt-1.5">
                         <SelectValue placeholder="Pilih jenis iuran" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-100 overflow-y-scroll">
                         {uniqueJenisIuran.map((jenis) => (
                           <SelectItem key={jenis?.id} value={String(jenis?.id)}>
                             {jenis?.nama_iuran}
@@ -254,7 +254,7 @@ export function TagihanDialog({
               <Input
                 type="month"
                 className="mt-1.5 w-full text-center [&::-webkit-datetime-edit]:text-center"
-                value={monthValue} // <-- Binding value agar form edit menampilkan periode
+                value={monthValue} 
                 onChange={(e) => {
                   const [year, month] = e.target.value.split("-");
 

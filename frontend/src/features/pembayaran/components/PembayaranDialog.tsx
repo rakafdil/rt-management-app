@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -135,7 +137,7 @@ export function PembayaranDialog({
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tagihanIds =
-        selectedPembayaran.detail_alokasi?.map((d: any) => d.tagihan_id) || [];
+        selectedPembayaran.detail_alokasi?.map((d) => d.tagihan_id) || [];
       setValue("tagihan_ids", tagihanIds);
     } else if (!isEdit && selectedTagihan) {
       const targetRumahId = selectedTagihan.rumah?.id
@@ -223,15 +225,14 @@ export function PembayaranDialog({
       reset();
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleError = (err: any) => {
+    const handleError = (err: { message?: string }) => {
       const msg =
         err?.message ??
         `Gagal ${isEdit ? "memperbarui" : "menambahkan"} pembayaran`;
       toast.error(msg);
     };
 
-    if (isEdit) {
+    if (isEdit && id !== null && id !== undefined) {
       updatePembayaranMutation.mutate(
         { id, data: formData },
         { onSuccess: handleSuccess, onError: handleError },
@@ -333,8 +334,7 @@ export function PembayaranDialog({
                         </SelectValue>
                       </SelectTrigger>
 
-                      <SelectContent>
-                        {/* Hapus filter .penghuni_aktif agar rumah kosong tetap bisa di-bayar tagihannya */}
+                      <SelectContent className="max-h-100 overflow-y-scroll">
                         {rumah?.map((r) => {
                           const p = penghuni?.find(
                             (x) => x.id === r.penghuni_aktif?.id,
@@ -602,7 +602,7 @@ export function PembayaranDialog({
             </div>
 
             <div className="grid grid-cols-2 gap-3 mt-2">
-              <div className="col-span-2 sm:col-span-1">
+              <div className="col-span-2 sm:col-span-2">
                 <Label>Metode Pembayaran</Label>
                 <Controller
                   control={control}
@@ -653,7 +653,7 @@ export function PembayaranDialog({
               <div className="flex justify-between items-center text-base font-semibold pt-2 border-t mt-2">
                 <span>Total Dibayar</span>
                 <span className="text-primary">
-                  {formatRp(totalBayarWatch || 0)}
+                  {formatRp(Number(totalBayarWatch) || 0)}
                 </span>
               </div>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PenghuniResource extends JsonResource
 {
@@ -13,7 +14,7 @@ class PenghuniResource extends JsonResource
         return [
             'id' => $this->id,
             'nama_lengkap' => $this->nama_lengkap,
-            'foto_ktp_url' => $this->foto_ktp ? url(Storage::url($this->foto_ktp)) : null,
+            'foto_ktp_url' => $this->resolveFotoKtpUrl(),
             'status_penghuni' => $this->status_penghuni,
             'nomor_telepon' => $this->nomor_telepon,
             'status_menikah' => $this->status_menikah,
@@ -32,5 +33,18 @@ class PenghuniResource extends JsonResource
                 ];
             }),
         ];
+    }
+
+    private function resolveFotoKtpUrl(): ?string
+    {
+        if (!$this->foto_ktp) {
+            return null;
+        }
+
+        if (Str::startsWith($this->foto_ktp, ['http://', 'https://'])) {
+            return $this->foto_ktp;
+        }
+
+        return url(Storage::url($this->foto_ktp));
     }
 }

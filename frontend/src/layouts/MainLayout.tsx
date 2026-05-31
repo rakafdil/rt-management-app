@@ -46,7 +46,7 @@ export function MainLayout() {
               RT Admin
             </div>
             <div className="text-xs text-sidebar-foreground/70">
-              Perumahan Mawar
+              Perumahan Beon
             </div>
           </div>
         </div>

@@ -8,9 +8,11 @@ export const ProtectedRoute = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   if (isLoading) {
-    return <div className="h-full">
-      <Loading message="Memeriksa sesi login..." />
-    </div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-muted/60 px-4">
+        <Loading message="memeriksa sesi login" />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

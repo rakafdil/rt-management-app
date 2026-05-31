@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { useAuthLogin, useAuthMe } from "@/features/auth/hooks/useAuth";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { Loading } from "@/components/Loading";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -58,14 +61,29 @@ const LoginForm = () => {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Masukkan password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Masukkan password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            className="pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground focus:outline-none"
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
       </div>
 
       <label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -78,7 +96,11 @@ const LoginForm = () => {
         Ingat saya
       </label>
 
-      <Button className="w-full" type="submit" disabled={loginMutation.isPending}>
+      <Button
+        className="w-full"
+        type="submit"
+        disabled={loginMutation.isPending}
+      >
         {loginMutation.isPending ? "Memproses..." : "Masuk"}
       </Button>
     </form>
@@ -86,17 +108,15 @@ const LoginForm = () => {
 };
 
 export const LoginPage = () => {
-  // const { isLoading: isChecking } = useAuthMe();
+  const { isLoading: isChecking } = useAuthMe();
 
-  // // if (isChecking) {
-  // //   return (
-  // //     <div className="flex h-screen items-center justify-center bg-muted/60 px-4">
-  // //       <div className="w-full max-w-md rounded-lg border bg-white p-6 shadow-sm text-center">
-  // //         Memeriksa sesi login...
-  // //       </div>
-  // //     </div>
-  // //   );
-  // // }
+  if (isChecking) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-muted/60 px-4">
+        <Loading message="memeriksa sesi login" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen items-center justify-center bg-muted/60 px-4">

@@ -11,26 +11,20 @@ class JenisIuranSeeder extends Seeder
     {
         $iuranUtama = [
             [
-                'nama_iuran' => 'Iuran Satpam',
+                'nama_iuran' => 'Satpam',
                 'nominal_default' => 100000,
             ],
             [
-                'nama_iuran' => 'Iuran Kebersihan',
+                'nama_iuran' => 'Kebersihan',
                 'nominal_default' => 15000,
-            ]
+            ],
         ];
 
         foreach ($iuranUtama as $iuran) {
             JenisIuran::updateOrCreate(
-                ['nama_iuran' => $iuran['nama_iuran']], 
+                ['nama_iuran' => $iuran['nama_iuran']],
                 $iuran
             );
-        }
-        
-        try {
-            JenisIuran::factory()->count(2)->create();
-        } catch (\Exception $e) {
-            $this->command->error("Factory Jenis Iuran Gagal: " . $e->getMessage());
         }
     }
 }

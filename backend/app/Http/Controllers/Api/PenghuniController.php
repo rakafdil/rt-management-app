@@ -17,7 +17,12 @@ class PenghuniController extends Controller
 {
     public function index()
     {
-        $penghuni = Penghuni::latest()->get();
+        $penghuni = Penghuni::with([
+            'historiHuni' => function ($query) {
+                $query->whereNull('tanggal_selesai')
+                    ->with('rumah');
+            }
+        ])->get();
         return PenghuniResource::collection($penghuni)
             ->response()
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);

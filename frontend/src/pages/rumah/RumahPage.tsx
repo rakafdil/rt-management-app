@@ -238,10 +238,10 @@ export default function RumahPage() {
                         <SelectValue placeholder="Pilih penghuni" />
                       </SelectTrigger>
 
-                      <SelectContent>
+                      <SelectContent className="max-h-100 overflow-y-scroll">
                         <SelectItem value="none">Tidak ada penghuni</SelectItem>
 
-                        {penghuni?.map((p) => (
+                        {penghuni?.filter((p) => p.rumah_aktif === null).map((p) => (
                           <SelectItem key={p.id} value={String(p.id)}>
                             {p.nama_lengkap}
                           </SelectItem>

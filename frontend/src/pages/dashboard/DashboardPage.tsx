@@ -114,7 +114,7 @@ export function DashboardPage() {
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <PageHeader
         title="Dashboard"
-        description="Ringkasan administrasi RT Perumahan Mawar — 12 bulan terakhir"
+        description="Ringkasan administrasi RT Perumahan Beon — 12 bulan terakhir"
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
