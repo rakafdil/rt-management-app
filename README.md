@@ -1,3 +1,27 @@
+# RT Administration System
+
+Sistem Administrasi RT berbasis Fullstack menggunakan **Laravel** sebagai Backend API dan **React + Vite** sebagai Frontend.
+
+## Teknologi yang Digunakan
+
+### Backend
+
+* PHP 8.2+
+* Laravel 12+
+* Composer
+* MySQL
+
+### Frontend
+
+* React
+* Vite
+* TypeScript
+* Axios
+* React Router
+* TanStack Query
+* Tailwind CSS
+* shadcn
+
 ## ERD Diagram
 ``` mermaid
 erDiagram
@@ -149,7 +173,483 @@ rt-management-app/          <-- Root folder
     │   ├── App.tsx
     │   └── main.tsx
     └── .env.example        <-- Simpan VITE_API_URL=http://localhost:8000/api
+
 ```
 ## Component Diagram
 ![component-diagram](./component-diagram.png)
 
+
+
+# Persyaratan Sistem
+
+Pastikan software berikut telah terinstall:
+
+| Software | Versi Minimum |
+| -------- | ------------- |
+| PHP      | 8.2           |
+| Composer | Latest        |
+| Node.js  | 20.x          |
+| npm      | 10.x          |
+| MySQL    | 8.x           |
+| Git      | Latest        |
+
+Cek versi yang terinstall:
+
+```bash
+php -v
+composer -V
+node -v
+npm -v
+mysql --version
+git --version
+```
+
+# Clone Repository
+
+```bash
+git clone <repository-url>
+cd project-root
+```
+
+
+# Instalasi Backend (Laravel)
+
+Masuk ke folder backend:
+
+```bash
+cd backend
+```
+
+## Install Dependency
+
+```bash
+composer install
+```
+
+## Membuat File Environment
+
+Linux / MacOS:
+
+```bash
+cp .env.example .env
+```
+
+Windows:
+
+```powershell
+copy .env.example .env
+```
+
+## Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+## Konfigurasi Database
+
+Buka file `.env`
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=rt_administration
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sesuaikan dengan konfigurasi MySQL masing-masing.
+
+
+
+## Menjalankan Migration
+
+```bash
+php artisan migrate
+```
+
+Jika project memiliki seeder:
+
+```bash
+php artisan db:seed
+```
+
+Atau:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+## Membuat Database (Harusnya otomatis dari migration jika tidak ada)
+
+Login ke MySQL:
+
+```sql
+CREATE DATABASE rt_administration;
+```
+
+
+## Membuat Storage Link
+
+Jika menggunakan upload file:
+
+```bash
+php artisan storage:link
+```
+
+
+## Menjalankan Backend
+
+```bash
+php artisan serve
+```
+
+Secara default API akan berjalan pada:
+
+```text
+http://127.0.0.1:8000
+```
+
+
+# Instalasi Frontend (React + Vite)
+
+Masuk ke folder frontend:
+
+```bash
+cd frontend
+```
+
+## Install Dependency
+
+```bash
+npm install
+```
+
+
+## Membuat File Environment
+
+Buat file:
+
+```text
+frontend/.env
+```
+
+Isi:
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
+
+Atau jika menggunakan domain:
+
+```env
+VITE_API_URL=https://api.domain.com/api
+```
+
+
+## Menjalankan Frontend
+
+```bash
+npm run dev
+```
+
+Secara default frontend berjalan pada:
+
+```text
+http://localhost:5173
+```
+
+
+# Menjalankan Project Secara Lengkap
+
+## Terminal 1 (Backend)
+
+```bash
+cd backend
+
+php artisan serve
+```
+
+Output:
+
+```text
+http://127.0.0.1:8000
+```
+
+
+## Terminal 2 (Frontend)
+
+```bash
+cd frontend
+
+npm run dev
+```
+
+Output:
+
+```text
+http://localhost:5173
+```
+
+
+# Akun Default
+
+Jika menggunakan Seeder:
+
+| Role  | Email                                         | Password |
+| ----- | --------------------------------------------- | -------- |
+| Admin | [admin@example.com](mailto:admin@example.com) | password |
+| User  | [user@example.com](mailto:user@example.com)   | password |
+
+> Sesuaikan dengan data seeder yang digunakan.
+
+---
+
+# Build Production
+
+## Backend
+
+Optimasi konfigurasi:
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+---
+
+## Frontend
+
+Build aplikasi:
+
+```bash
+npm run build
+```
+
+Hasil build akan berada di:
+
+```text
+frontend/dist
+```
+
+Preview build:
+
+```bash
+npm run preview
+```
+
+---
+
+# Testing
+
+## Backend
+
+```bash
+php artisan test
+```
+
+atau
+
+```bash
+php artisan test --parallel
+```
+
+---
+
+## Frontend
+
+```bash
+npm run test
+```
+
+atau sesuai framework testing yang digunakan.
+
+---
+
+# Troubleshooting
+
+## Composer Install Gagal
+
+Update composer:
+
+```bash
+composer self-update
+```
+
+Lalu:
+
+```bash
+composer clear-cache
+composer install
+```
+
+---
+
+## Error APP_KEY Missing
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## Error Storage Link
+
+Hapus link lama:
+
+```bash
+php artisan storage:unlink
+```
+
+Kemudian:
+
+```bash
+php artisan storage:link
+```
+
+---
+
+## Error Vite Tidak Bisa Terhubung ke API
+
+Pastikan:
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
+
+Backend sedang berjalan:
+
+```bash
+php artisan serve
+```
+
+---
+
+## Error Migration
+
+Rollback:
+
+```bash
+php artisan migrate:rollback
+```
+
+Reset:
+
+```bash
+php artisan migrate:fresh
+```
+
+Dengan seeder:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
+# Command Penting
+
+## Laravel
+
+```bash
+php artisan serve
+php artisan migrate
+php artisan migrate:fresh --seed
+php artisan db:seed
+php artisan storage:link
+php artisan test
+```
+
+## React + Vite
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run preview
+```
+
+---
+
+# Environment Variables
+
+## Backend (.env)
+
+```env
+APP_NAME="RT Administration System"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=rt_administration
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## Frontend (.env)
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
+
+---
+
+# Deployment Overview
+
+## Backend
+
+1. Upload source code Laravel
+2. Jalankan:
+
+```bash
+composer install --optimize-autoloader --no-dev
+```
+
+3. Konfigurasi `.env`
+4. Generate key:
+
+```bash
+php artisan key:generate
+```
+
+5. Migration:
+
+```bash
+php artisan migrate --force
+```
+
+6. Cache:
+
+```bash
+php artisan optimize
+```
+
+---
+
+## Frontend
+
+```bash
+npm install
+npm run build
+```
+
+Deploy isi folder:
+
+```text
+frontend/dist
+```
+
+ke Nginx, Apache, Vercel, atau layanan hosting lainnya.
+
+---
+
+# License
+
+Proyek ini dikembangkan untuk kebutuhan Sistem Administrasi RT.

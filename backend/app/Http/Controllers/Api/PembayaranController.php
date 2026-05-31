@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Keuangan\StorePembayaranRequest;
 use App\Models\Pembayaran;
 use App\Http\Resources\PembayaranResource;
-use App\Services\PaymentService; 
+use App\Models\Rumah;
+use App\Services\PaymentService;
 
 class PembayaranController extends Controller
 {
@@ -27,7 +28,7 @@ class PembayaranController extends Controller
     {
         try {
             $validated = $request->validated();
-            
+
             $pembayaran = $this->paymentService->processPayment($validated);
 
             $pembayaran->load(['rumah', 'penghuni', 'detailPembayaran.tagihan.jenisIuran']);
@@ -49,5 +50,16 @@ class PembayaranController extends Controller
     {
         $pembayaran = Pembayaran::with(['rumah', 'penghuni', 'detailPembayaran.tagihan.jenisIuran'])->findOrFail($id);
         return new PembayaranResource($pembayaran);
+    }
+
+    public function getByRumah(Rumah $rumah)
+    {
+        $tagihan = Pembayaran::with('detailPembayaran')
+            ->where('rumah_id', $rumah->id)
+            ->orderBy('periode_tahun', 'desc')
+            ->orderBy('periode_bulan', 'desc')
+            ->get();
+
+        return PembayaranResource::collection($tagihan);
     }
 }

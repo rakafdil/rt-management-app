@@ -7,6 +7,7 @@ import LaporanPage from "@/pages/laporan/LaporanPage";
 import PembayaranPage from "@/pages/pembayaran/PembayaranPage";
 import PengeluaranPage from "@/pages/pengeluaran/PengeluaranPage";
 import { PenghuniPage } from "@/pages/penghuni/PenghuniPage";
+import { PenghuniDetailPage } from "@/pages/penghuni/PenghuniDetailPage";
 import RumahPage from "@/pages/rumah/RumahPage";
 import RumahDetailPage from "@/pages/rumah/RumahDetailPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
           {
             path: "/penghuni",
             element: <PenghuniPage />,
+          },
+          {
+            path: "/penghuni/:id",
+            element: <PenghuniDetailPage />,
           },
           {
             path: "/pembayaran",

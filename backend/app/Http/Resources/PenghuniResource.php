@@ -19,6 +19,18 @@ class PenghuniResource extends JsonResource
             'status_menikah' => $this->status_menikah,
             'status_menikah_label' => $this->status_menikah ? 'Menikah' : 'Belum Menikah',
             'bergabung_sejak' => $this->created_at->format('d M Y'),
+            'rumah_aktif' => $this->whenLoaded('historiHuni', function () {
+                $historiAktif = $this->historiHuni->first();
+
+                if (!$historiAktif || !$historiAktif->rumah) {
+                    return null;
+                }
+
+                return [
+                    'id' => $historiAktif->rumah->id,
+                    'blok_nomor' => $historiAktif->rumah->blok_nomor,
+                ];
+            }),
         ];
     }
 }

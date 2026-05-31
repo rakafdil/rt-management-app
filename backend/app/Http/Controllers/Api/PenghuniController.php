@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Penghuni\UpsertPenghuniRequest;
 use App\Models\Penghuni;
+use App\Models\HistoriHuni;
+use App\Models\Pembayaran;
+use App\Models\Tagihan;
 use App\Http\Resources\PenghuniResource;
+use App\Http\Resources\PembayaranResource;
+use App\Http\Resources\TagihanResource;
 use Illuminate\Support\Facades\Storage;
 
 class PenghuniController extends Controller
@@ -37,6 +42,12 @@ class PenghuniController extends Controller
 
     public function show(Penghuni $penghuni)
     {
+        $penghuni->load([
+            'historiHuni' => function ($query) {
+                $query->whereNull('tanggal_selesai')->with('rumah');
+            }
+        ]);
+
         return (new PenghuniResource($penghuni))
             ->response()
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
@@ -65,5 +76,34 @@ class PenghuniController extends Controller
     {
         $penghuni->delete();
         return response()->json(['message' => 'Data penghuni berhasil dihapus']);
+    }
+
+    public function tagihan(Penghuni $penghuni)
+    {
+        $rumahIds = HistoriHuni::where('penghuni_id', $penghuni->id)
+            ->distinct()
+            ->pluck('rumah_id');
+
+        $tagihan = Tagihan::with(['rumah', 'jenisIuran'])
+            ->whereIn('rumah_id', $rumahIds)
+            ->orderBy('periode_tahun', 'desc')
+            ->orderBy('periode_bulan', 'desc')
+            ->get();
+
+        return TagihanResource::collection($tagihan);
+    }
+
+    public function pembayaran(Penghuni $penghuni)
+    {
+        $pembayaran = Pembayaran::with([
+            'rumah',
+            'penghuni',
+            'detailPembayaran.tagihan.jenisIuran'
+        ])
+            ->where('penghuni_id', $penghuni->id)
+            ->orderBy('tanggal_bayar', 'desc')
+            ->get();
+
+        return PembayaranResource::collection($pembayaran);
     }
 }

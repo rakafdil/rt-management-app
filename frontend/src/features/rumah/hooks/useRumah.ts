@@ -28,11 +28,11 @@ export const useGetTagihanRumah = (rumahId: string | null) => {
   });
 };
 
-export const useAssignPenghuni = (rumahId: string, data: AssignRumahDTO) => {
+export const useAssignPenghuni = (rumahId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => historiHuniApi(rumahId).assign(data),
+    mutationFn: (data: AssignRumahDTO) => historiHuniApi(rumahId).assign(data),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -46,14 +46,11 @@ export const useAssignPenghuni = (rumahId: string, data: AssignRumahDTO) => {
   });
 };
 
-export const useUnassignPenghuni = (
-  rumahId: string,
-  data: UnassignRumahDTO,
-) => {
+export const useUnassignPenghuni = (rumahId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => historiHuniApi(rumahId).unassign(data),
+    mutationFn: (data: UnassignRumahDTO) => historiHuniApi(rumahId).unassign(data),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({

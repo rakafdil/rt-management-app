@@ -7,6 +7,13 @@ export const penghuniSchema = z.object({
   status_menikah: z.boolean(),
   nomor_telepon: z.string().nullable(),
   foto_ktp_url: z.string().nullable(),
+  rumah_aktif: z
+    .object({
+      id: z.string(),
+      blok_nomor: z.string(),
+    })
+    .nullable()
+    .optional(),
 });
 
 export type Penghuni = z.infer<typeof penghuniSchema>;

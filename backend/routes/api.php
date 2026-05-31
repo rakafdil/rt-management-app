@@ -23,6 +23,8 @@ Route::get('/', function () {
 Route::prefix('v1')->group(function () {
 
     Route::apiResource('penghuni', PenghuniController::class);
+    Route::get('penghuni/{penghuni}/tagihan', [PenghuniController::class, 'tagihan']);
+    Route::get('penghuni/{penghuni}/pembayaran', [PenghuniController::class, 'pembayaran']);
 
     Route::apiResource('rumah', RumahController::class);
 
@@ -42,7 +44,6 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('reports')->group(function () {
         Route::get('/summary', [ReportController::class, 'summary']);
-
         Route::get('/detail', [ReportController::class, 'detail']);
     });
 

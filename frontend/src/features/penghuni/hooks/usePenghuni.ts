@@ -1,11 +1,42 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getPenghuni, createPenghuni, deletePenghuni } from "../api";
+import {
+  getPenghuni,
+  getPenghuniById,
+  getTagihanPenghuni,
+  getPembayaranPenghuni,
+  createPenghuni,
+  deletePenghuni,
+} from "../api";
 import { api } from "@/lib/axios";
 
 export const useGetPenghuni = () => {
   return useQuery({
     queryKey: ["penghuni"],
     queryFn: getPenghuni,
+  });
+};
+
+export const useGetPenghuniById = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: ["penghuni", id],
+    queryFn: () => getPenghuniById(id),
+    enabled: enabled && !!id,
+  });
+};
+
+export const useGetTagihanPenghuni = (id: string) => {
+  return useQuery({
+    queryKey: ["penghuni", id, "tagihan"],
+    queryFn: () => getTagihanPenghuni(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetPembayaranPenghuni = (id: string) => {
+  return useQuery({
+    queryKey: ["penghuni", id, "pembayaran"],
+    queryFn: () => getPembayaranPenghuni(id),
+    enabled: !!id,
   });
 };
 

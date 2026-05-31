@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { PageHeader } from "@/layouts/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 import { type Penghuni } from "@/features/penghuni/types";
@@ -124,6 +125,11 @@ export function PenghuniPage() {
                     {p.status_menikah ? "Menikah" : "Belum menikah"}
                   </TableCell>
                   <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link to={`/penghuni/${p.id}`}>
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"

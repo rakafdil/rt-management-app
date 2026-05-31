@@ -31,8 +31,8 @@ class HistoriHuniController extends Controller
         DB::transaction(function () use ($penghuni, $rumah) {
             HistoriHuni::create([
                 'rumah_id' => $rumah->id,
-                'penghuni_id' => $penghuni->penghuni_id,
-                'tanggal_mulai' => $penghuni->tanggal_mulai,
+                'penghuni_id' => $penghuni['penghuni_id'],
+                'tanggal_mulai' => $penghuni['tanggal_mulai'],
                 'tanggal_selesai' => null,
             ]);
 
@@ -55,7 +55,7 @@ class HistoriHuniController extends Controller
         }
 
         DB::transaction(function () use ($selesai, $rumah, $historiAktif) {
-            $historiAktif->update(['tanggal_selesai' => $selesai->tanggal_selesai]);
+            $historiAktif->update(['tanggal_selesai' => $selesai['tanggal_selesai']]);
 
             $rumah->update(['status_huni' => StatusHuni::KOSONG]);
         });
