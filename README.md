@@ -14,6 +14,27 @@
 </div>
 
 ---
+<details open>
+<summary><strong>📑 Daftar Isi</strong></summary>
+
+<br>
+
+- [✨ Tentang Proyek](#-tentang-proyek)
+- [🛠️ Teknologi](#️-teknologi)
+- [📐 ERD Diagram](#-erd-diagram)
+  - [🏠 Entitas Inti Penghuni & Rumah](#-entitas-inti-penghuni--rumah)
+  - [💰 Sistem Tagihan](#-sistem-tagihan)
+  - [💳 Sistem Pembayaran](#-sistem-pembayaran)
+  - [📉 Pengeluaran Kas](#-pengeluaran-kas)
+- [🧩 Component Diagram](#-component-diagram)
+- [📁 Struktur Proyek](#-struktur-proyek)
+- [🚀 Instalasi](#-instalasi)
+- [🔑 Akun Default](#-akun-default)
+- [📦 Build Production](#-build-production)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [📋 Command Referensi](#-command-referensi)
+
+</details>
 
 ## ✨ Tentang Proyek
 
@@ -256,6 +277,50 @@ erDiagram
   <li><strong>Pengeluaran</strong> → Mencatat biaya operasional dan penggunaan kas RT.</li>
 </ul>
 
+## 🧩 Component Diagram
+![component-diagram](./component-diagram.png)
+
+Diagram ini menggambarkan struktur komponen backend aplikasi administrasi RT berbasis Laravel serta interaksinya dengan frontend, database, dan penyimpanan file.
+
+### 👤 Aktor
+
+- **Admin RT** menggunakan aplikasi melalui frontend berbasis React untuk mengelola seluruh data operasional perumahan.
+
+### 🖥️ Frontend Application
+
+Frontend berfungsi sebagai antarmuka pengguna yang mengirimkan permintaan ke API Laravel untuk melakukan operasi CRUD, pembayaran, pengeluaran, dan melihat laporan.
+
+### ⚙️ Laravel API Application
+
+Backend terdiri dari beberapa komponen utama:
+
+| Komponen | Tanggung Jawab |
+|-----------|----------------|
+| **Penghuni Manager** | Mengelola data penghuni dan penyimpanan foto KTP. |
+| **Rumah Manager** | Mengelola data rumah dan histori hunian penghuni. |
+| **Payment Manager** | Mengelola transaksi pembayaran tagihan warga. |
+| **Billing Service** | Membuat dan menghasilkan tagihan bulanan secara otomatis. |
+| **Expense Manager** | Mengelola pencatatan pengeluaran kas RT. |
+| **Report Service** | Menghasilkan laporan keuangan dan data statistik. |
+
+### 🔄 Alur Interaksi
+
+1. Admin RT berinteraksi melalui aplikasi frontend.
+2. Frontend mengirimkan request ke komponen backend yang sesuai.
+3. Setiap komponen melakukan operasi baca/tulis ke database MySQL.
+4. Penghuni Manager menyimpan foto KTP ke File Storage.
+5. Payment Manager dapat memanggil Billing Service untuk menghasilkan tagihan tambahan.
+6. Report Service mengambil dan mengolah data dari database untuk menghasilkan laporan.
+
+### 🗄️ Penyimpanan Data
+
+- **MySQL Database** digunakan untuk menyimpan seluruh data aplikasi seperti penghuni, rumah, histori huni, tagihan, pembayaran, dan pengeluaran.
+- **File Storage** digunakan untuk menyimpan dokumen pendukung seperti foto KTP penghuni.
+
+### 📌 Ringkasan Arsitektur
+
+Arsitektur menggunakan pendekatan **Layered Architecture** di mana frontend berkomunikasi dengan Laravel API. Setiap domain bisnis dipisahkan ke dalam manager atau service yang memiliki tanggung jawab spesifik, sehingga kode lebih terstruktur, mudah dikembangkan, dan mudah dipelihara.
+
 ## 📁 Struktur Proyek
 
 ```
@@ -321,7 +386,7 @@ php -v && composer -V && node -v && npm -v && mysql --version
 ### 1. Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/rakafdil/rt-management-app
 cd rt-management-app
 ```
 
@@ -341,7 +406,7 @@ copy .env.example .env        # Windows
 php artisan key:generate
 ```
 
-**Konfigurasi `.env`:**
+**Konfigurasi `.env`: (sesuaikan dengan konfiugirasi database Anda)**
 
 ```env
 DB_CONNECTION=mysql
