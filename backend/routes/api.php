@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\KategoriPengeluaranController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,30 +22,40 @@ Route::get('/', function () {
 });
 
 Route::prefix('v1')->group(function () {
-
-    Route::apiResource('penghuni', PenghuniController::class);
-    Route::get('penghuni/{penghuni}/tagihan', [PenghuniController::class, 'tagihan']);
-    Route::get('penghuni/{penghuni}/pembayaran', [PenghuniController::class, 'pembayaran']);
-
-    Route::apiResource('rumah', RumahController::class);
-
-    Route::prefix('rumah/{rumah}')->group(function () {
-        Route::get('/histori', [HistoriHuniController::class, 'index']);
-        Route::post('/assign', [HistoriHuniController::class, 'assign']);
-        Route::post('/unassign', [HistoriHuniController::class, 'unassign']);
-        Route::get('/tagihan', [TagihanController::class, 'getByRumah']);
+    Route::prefix('auth')->group(function () {
+        Route::post('/login', [AuthController::class, 'login']);
     });
 
-    Route::apiResource('/tagihan', TagihanController::class);
-    Route::apiResource('pembayaran', PembayaranController::class)->only(['index', 'store', 'show']);
-    Route::apiResource('pengeluaran', PengeluaranController::class);
-    Route::post('/tagihan/generate-manual', [TagihanController::class, 'generateManual']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::get('/me', [AuthController::class, 'me']);
+            Route::post('/logout', [AuthController::class, 'logout']);
+        });
 
-    Route::get('/kategori-pengeluaran/search', [KategoriPengeluaranController::class, 'search']);
+        Route::apiResource('penghuni', PenghuniController::class);
+        Route::get('penghuni/{penghuni}/tagihan', [PenghuniController::class, 'tagihan']);
+        Route::get('penghuni/{penghuni}/pembayaran', [PenghuniController::class, 'pembayaran']);
 
-    Route::prefix('reports')->group(function () {
-        Route::get('/summary', [ReportController::class, 'summary']);
-        Route::get('/detail', [ReportController::class, 'detail']);
+        Route::apiResource('rumah', RumahController::class);
+
+        Route::prefix('rumah/{rumah}')->group(function () {
+            Route::get('/histori', [HistoriHuniController::class, 'index']);
+            Route::post('/assign', [HistoriHuniController::class, 'assign']);
+            Route::post('/unassign', [HistoriHuniController::class, 'unassign']);
+            Route::get('/tagihan', [TagihanController::class, 'getByRumah']);
+        });
+
+        Route::apiResource('/tagihan', TagihanController::class);
+        Route::apiResource('pembayaran', PembayaranController::class)->only(['index', 'store', 'show']);
+        Route::apiResource('pengeluaran', PengeluaranController::class);
+        Route::post('/tagihan/generate-manual', [TagihanController::class, 'generateManual']);
+
+        Route::get('/kategori-pengeluaran/search', [KategoriPengeluaranController::class, 'search']);
+
+        Route::prefix('reports')->group(function () {
+            Route::get('/summary', [ReportController::class, 'summary']);
+            Route::get('/detail', [ReportController::class, 'detail']);
+        });
     });
 
 });

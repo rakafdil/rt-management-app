@@ -172,7 +172,7 @@ rt-management-app/          <-- Root folder
     │   ├── utils/          <-- Helper (format uang Rupiah, format tanggal)
     │   ├── App.tsx
     │   └── main.tsx
-    └── .env.example        <-- Simpan VITE_API_URL=http://localhost:8000/api
+    └── .env.example        <-- Simpan VITE_API_URL=http://localhost:8000/api/v1
 
 ```
 ## Component Diagram
@@ -257,6 +257,14 @@ DB_PORT=3306
 DB_DATABASE=rt_administration
 DB_USERNAME=root
 DB_PASSWORD=
+
+SESSION_DRIVER=file
+SANCTUM_STATEFUL_DOMAINS=localhost:5173,127.0.0.1:5173,localhost:8000,127.0.0.1:8000
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+
+SESSION_DRIVER=file
+SANCTUM_STATEFUL_DOMAINS=localhost:5173,127.0.0.1:5173,localhost:8000,127.0.0.1:8000
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
 Sesuaikan dengan konfigurasi MySQL masing-masing.
@@ -338,13 +346,13 @@ frontend/.env
 Isi:
 
 ```env
-VITE_API_URL=http://127.0.0.1:8000/api
+VITE_API_URL=http://localhost:8000/api/v1
 ```
 
 Atau jika menggunakan domain:
 
 ```env
-VITE_API_URL=https://api.domain.com/api
+VITE_API_URL=https://api.domain.com/api/v1
 ```
 
 
@@ -360,6 +368,8 @@ Secara default frontend berjalan pada:
 http://localhost:5173
 ```
 
+Catatan: Autentikasi memakai cookie (Laravel Sanctum). Gunakan hostname yang sama untuk frontend dan backend (contoh: sama-sama `localhost`) agar cookie CSRF terbaca. Pastikan domain frontend ada di `SANCTUM_STATEFUL_DOMAINS` dan `CORS_ALLOWED_ORIGINS`.
+
 
 # Menjalankan Project Secara Lengkap
 
@@ -374,7 +384,7 @@ php artisan serve
 Output:
 
 ```text
-http://127.0.0.1:8000
+http://localhost:8000
 ```
 
 
@@ -399,8 +409,7 @@ Jika menggunakan Seeder:
 
 | Role  | Email                                         | Password |
 | ----- | --------------------------------------------- | -------- |
-| Admin | [admin@example.com](mailto:admin@example.com) | password |
-| User  | [user@example.com](mailto:user@example.com)   | password |
+| Admin | [test@example.com](mailto:test@example.com)   | password |
 
 > Sesuaikan dengan data seeder yang digunakan.
 
@@ -516,7 +525,13 @@ php artisan storage:link
 Pastikan:
 
 ```env
-VITE_API_URL=http://127.0.0.1:8000/api
+VITE_API_URL=http://127.0.0.1:8000/api/v1
+```
+
+Jika kamu menggunakan `localhost` untuk backend, gunakan:
+
+```env
+VITE_API_URL=http://localhost:8000/api/v1
 ```
 
 Backend sedang berjalan:
@@ -581,7 +596,7 @@ npm run preview
 APP_NAME="RT Administration System"
 APP_ENV=local
 APP_DEBUG=true
-APP_URL=http://127.0.0.1:8000
+APP_URL=http://localhost:8000
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -596,7 +611,7 @@ DB_PASSWORD=
 ## Frontend (.env)
 
 ```env
-VITE_API_URL=http://127.0.0.1:8000/api
+VITE_API_URL=http://localhost:8000/api/v1
 ```
 
 ---

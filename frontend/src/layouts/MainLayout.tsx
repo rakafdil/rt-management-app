@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -9,6 +9,8 @@ import {
   Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useAuthLogout } from "@/features/auth/hooks/useAuth";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -21,6 +23,16 @@ const nav = [
 
 export function MainLayout() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const logoutMutation = useAuthLogout();
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        navigate("/login");
+      },
+    });
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -60,8 +72,16 @@ export function MainLayout() {
             );
           })}
         </nav>
-        <div className="px-6 py-4 border-t border-sidebar-border text-xs text-sidebar-foreground/60">
-          Prototype v1.0
+        <div className="px-6 py-4 border-t border-sidebar-border">
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full justify-start text-xs text-sidebar-foreground/70"
+            onClick={handleLogout}
+            disabled={logoutMutation.isPending}
+          >
+            {logoutMutation.isPending ? "Memproses logout..." : "Logout"}
+          </Button>
         </div>
       </aside>
 

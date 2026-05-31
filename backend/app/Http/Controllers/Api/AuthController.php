@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -23,13 +24,13 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        $token = $user->createToken($validatedData['device_name'] ?? 'api-token')->plainTextToken;
+        Auth::login($user);
+        $request->session()->regenerate();
 
         return response()->json([
             'message' => 'Registrasi berhasil',
             'data' => [
                 'user' => $user,
-                'token' => $token,
             ],
         ], 201);
     }
@@ -38,21 +39,24 @@ class AuthController extends Controller
     {
         $validatedData = $request->validated();
 
-        $user = User::where('email', $validatedData['email'])->first();
+        $remember = (bool) ($validatedData['remember'] ?? false);
+        $credentials = [
+            'email' => $validatedData['email'],
+            'password' => $validatedData['password'],
+        ];
 
-        if (! $user || ! Hash::check($validatedData['password'], $user->password)) {
+        if (! Auth::attempt($credentials, $remember)) {
             throw ValidationException::withMessages([
                 'email' => ['Email atau password tidak valid.'],
             ]);
         }
 
-        $token = $user->createToken($validatedData['device_name'] ?? 'api-token')->plainTextToken;
+        $request->session()->regenerate();
 
         return response()->json([
             'message' => 'Login berhasil',
             'data' => [
-                'user' => $user,
-                'token' => $token,
+                'user' => $request->user(),
             ],
         ]);
     }
@@ -66,7 +70,10 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()?->delete();
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
             'message' => 'Logout berhasil',

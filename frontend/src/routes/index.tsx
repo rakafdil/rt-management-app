@@ -12,12 +12,13 @@ import RumahPage from "@/pages/rumah/RumahPage";
 import RumahDetailPage from "@/pages/rumah/RumahDetailPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { authRoutes } from "@/features/auth/routes";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
 
 export const router = createBrowserRouter([
   ...authRoutes,
 
   {
-    element: "",
+    element: <ProtectedRoute />,
     children: [
       {
         element: <MainLayout />,

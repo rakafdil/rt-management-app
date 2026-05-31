@@ -2,24 +2,40 @@ import axios from "axios";
 import { useAuthStore } from "../store/useAuthStore";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1", 
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+const getCookie = (name: string) => {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  const cookie = document.cookie
+    .split(";")
+    .map((item) => item.trim())
+    .find((item) => item.startsWith(`${name}=`));
+
+  if (!cookie) {
+    return null;
+  }
+
+  return decodeURIComponent(cookie.substring(name.length + 1));
+};
+
+api.interceptors.request.use((config) => {
+  const token = getCookie("XSRF-TOKEN");
+  if (token) {
+    config.headers["X-XSRF-TOKEN"] = token;
+  }
+
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
