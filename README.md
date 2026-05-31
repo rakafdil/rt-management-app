@@ -37,7 +37,7 @@ RT Administration System adalah aplikasi fullstack untuk membantu pengurus RT me
 |-------|-------|
 | **Backend** | PHP 8.2+, Laravel 12, MySQL 8, Laravel Sanctum |
 | **Frontend** | React, Vite, TypeScript, Tailwind CSS, shadcn/ui |
-| **State & Data** | TanStack Query, Zustand, Axios |
+| **State & Data** | TanStack Query, Zustand, Axios, Zod |
 | **Routing** | React Router DOM |
 
 ---
@@ -144,7 +144,117 @@ erDiagram
     }
 ```
 
----
+<h2>🏠 Entitas Inti Penghuni & Rumah</h2>
+
+<p>
+  <strong>Penghuni</strong> menyimpan data pribadi warga seperti nama, nomor KTP,
+  nomor telepon, dan status penghuni.
+</p>
+
+<p>
+  <strong>Rumah</strong> menyimpan data unit rumah yang ada di perumahan berdasarkan
+  blok dan nomor rumah.
+</p>
+
+<p>
+  Hubungan antara penghuni dan rumah dikelola melalui tabel
+  <strong>histori_huni</strong>. Tabel ini berfungsi sebagai pencatat riwayat
+  hunian, termasuk kapan seorang penghuni mulai menempati rumah dan kapan
+  masa huninya berakhir.
+</p>
+
+<p>
+  Jika nilai <code>tanggal_selesai</code> bernilai <code>NULL</code>, maka
+  penghuni tersebut masih aktif menempati rumah tersebut saat ini.
+</p>
+
+<h2>💰 Sistem Tagihan</h2>
+
+<p>
+  <strong>Jenis Iuran</strong> berfungsi sebagai master data atau template iuran
+  yang berlaku di lingkungan perumahan.
+</p>
+
+<p>Contoh data jenis iuran:</p>
+
+<ul>
+  <li>Iuran Keamanan — Rp50.000 per bulan</li>
+  <li>Iuran Kebersihan — Rp25.000 per bulan</li>
+  <li>Iuran Kas RT — Rp20.000 per bulan</li>
+</ul>
+
+<p>
+  Berdasarkan data pada <strong>jenis_iuran</strong>, sistem akan menghasilkan
+  (<em>generate</em>) <strong>tagihan</strong> untuk setiap rumah pada periode tertentu.
+</p>
+
+<p>
+  Setiap tagihan memiliki status pembayaran:
+</p>
+
+<ul>
+  <li><code>belum_bayar</code> → Belum ada pembayaran.</li>
+  <li><code>sebagian</code> → Sudah dibayar sebagian.</li>
+  <li><code>lunas</code> → Tagihan telah dibayar penuh.</li>
+</ul>
+
+<h2>💳 Sistem Pembayaran</h2>
+
+<p>
+  <strong>Pembayaran</strong> mencatat transaksi pembayaran yang dilakukan oleh
+  penghuni untuk rumah tertentu.
+</p>
+
+<p>
+  Satu transaksi pembayaran dapat digunakan untuk membayar beberapa tagihan
+  sekaligus. Hubungan tersebut dicatat melalui tabel
+  <strong>detail_pembayaran</strong> yang berfungsi sebagai tabel alokasi pembayaran.
+</p>
+
+<p>Contoh:</p>
+
+<ul>
+  <li>Total pembayaran: Rp150.000</li>
+  <li>Tunggakan bulan sebelumnya: Rp50.000</li>
+  <li>Tagihan bulan berjalan: Rp100.000</li>
+</ul>
+
+<p>
+  Dalam kasus tersebut, satu transaksi pembayaran sebesar
+  <strong>Rp150.000</strong> dapat dialokasikan ke dua tagihan yang berbeda
+  melalui data pada <strong>detail_pembayaran</strong>.
+</p>
+
+<h2>📉 Pengeluaran Kas</h2>
+
+<p>
+  <strong>Pengeluaran</strong> digunakan untuk mencatat seluruh arus kas keluar
+  yang dilakukan oleh pengurus RT atau pengelola perumahan.
+</p>
+
+<p>
+  Setiap pengeluaran dikelompokkan menggunakan
+  <strong>kategori_pengeluaran</strong> agar pencatatan keuangan lebih terstruktur.
+</p>
+
+<p>Contoh kategori pengeluaran:</p>
+
+<ul>
+  <li>Pemeliharaan Fasilitas</li>
+  <li>Operasional Satpam</li>
+  <li>Kebersihan Lingkungan</li>
+  <li>Perbaikan Infrastruktur</li>
+</ul>
+
+<p>
+  Sistem pengeluaran dipisahkan dari sistem tagihan karena memiliki tujuan yang
+  berbeda:
+</p>
+
+<ul>
+  <li><strong>Tagihan & Pembayaran</strong> → Mencatat pemasukan dari warga.</li>
+  <li><strong>Pengeluaran</strong> → Mencatat biaya operasional dan penggunaan kas RT.</li>
+</ul>
 
 ## 📁 Struktur Proyek
 

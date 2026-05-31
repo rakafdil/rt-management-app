@@ -8,7 +8,7 @@ Demonstrasi lengkap semua fitur aplikasi melalui screen recording.
 
 </div>
 
----
+
 
 ## 🔐 Autentikasi
 
@@ -16,7 +16,7 @@ Login dan logout dengan sistem cookie berbasis Laravel Sanctum.
 
 ![Demo Login](./features/auth.gif)
 
----
+
 
 ## 📊 Dashboard
 
@@ -24,7 +24,7 @@ Ringkasan statistik RT: total penghuni, rumah, tagihan tertunggak, dan saldo kas
 
 ![Demo Dashboard](./features/dashboard.gif)
 
----
+
 
 ## 👤 Manajemen Penghuni
 
@@ -46,7 +46,7 @@ Perbarui data atau hapus penghuni dari sistem.
 
 ![Edit & Hapus Penghuni](./features/penghuni-edit-hapus.gif)
 
----
+
 
 ## 🏠 Manajemen Rumah
 
@@ -62,7 +62,7 @@ Lihat penghuni aktif, histori hunian, tagihan terkait, dan kelola assignment hun
 
 ![Detail Rumah](./features/rumah-detail-un_assign.gif)
 
----
+
 
 ## 💰 Pembayaran & Tagihan
 
@@ -84,7 +84,7 @@ Koreksi atau hapus transaksi pembayaran yang sudah dicatat.
 
 ![Edit & Hapus Pembayaran](./features/pembayaran-edit-hapus.gif)
 
----
+
 
 ## 🧾 Pengeluaran
 
@@ -100,7 +100,7 @@ Hapus pengeluaran yang salah input.
 
 ![Hapus Pengeluaran](./features/pengeluaran-hapus.gif)
 
----
+
 
 ## 📈 Laporan Keuangan
 
@@ -108,7 +108,7 @@ Ringkasan pemasukan, pengeluaran, dan saldo kas RT dalam rentang periode tertent
 
 ![Laporan Keuangan](./features/laporan-keuangan.gif)
 
----
+
 
 <div align="center">
 
